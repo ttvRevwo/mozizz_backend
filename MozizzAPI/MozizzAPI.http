@@ -1,0 +1,6 @@
+@MozizzAPI_HostAddress = http://localhost:5083
+
+GET {{MozizzAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
