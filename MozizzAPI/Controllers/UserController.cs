@@ -60,5 +60,33 @@ namespace MozizzAPI.Controllers
                 }
             }
         }
+
+        [HttpDelete("DelUser")]
+        public IActionResult DeleteUser(int id)
+        {
+            using (var context = new MozizzContext())
+            {
+                try
+                {
+
+                    if (context.Users.Select(u => u.Id).Contains(id))
+                    {
+                        User torlendo = new User { Id = id };
+                        context.Users.Remove(torlendo);
+                        context.SaveChanges();
+                        return Ok("Sikeres törlés!");
+                    }
+                    else
+                    {
+                        return NotFound("Nincs ilyen felhasználó!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest($"Hiba a törlés közben: {ex.Message}");
+                }
+            }
+        }
+
     }
 }
