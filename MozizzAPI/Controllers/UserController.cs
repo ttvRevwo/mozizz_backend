@@ -69,9 +69,9 @@ namespace MozizzAPI.Controllers
                 try
                 {
 
-                    if (context.Users.Select(u => u.Id).Contains(id))
+                    if (context.Users.Select(u => u.UserId).Contains(id))
                     {
-                        User torlendo = new User { Id = id };
+                        User torlendo = new User { UserId = id };
                         context.Users.Remove(torlendo);
                         context.SaveChanges();
                         return Ok("Sikeres törlés!");
@@ -84,6 +84,44 @@ namespace MozizzAPI.Controllers
                 catch (Exception ex)
                 {
                     return BadRequest($"Hiba a törlés közben: {ex.Message}");
+                }
+            }
+        }
+        [HttpPost("NewUser")]
+        public IActionResult NewUser(User user)
+        {
+            using (var context = new MozizzContext())
+
+                try
+                {
+                    context.Users.Add(user);
+                    context.SaveChanges();
+                    return Ok("Sikeres rögzítés!");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest($"Hiba a rögzítés közben: {ex.Message}");
+                }
+        }
+
+        [HttpPut("ModifyUser")]
+        public IActionResult ModifyUser(User user)
+        {
+            using (var context = new MozizzContext())
+            {
+                try
+                {
+                    if (context.Users.Select(u => u.UserId).Contains(user.UserId))
+                    {
+                        context.Users.Update(user);
+                        context.SaveChanges();
+                    }
+                    ;
+                    return Ok("Sikeres módosítás.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest($"Hiba a módosítás közben: {ex.Message}");
                 }
             }
         }
