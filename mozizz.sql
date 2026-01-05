@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Okt 26. 13:46
+-- Létrehozás ideje: 2026. Jan 05. 17:49
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.0.30
 
@@ -39,6 +39,13 @@ CREATE TABLE `emaillogs` (
   `status` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `emaillogs`
+--
+
+INSERT INTO `emaillogs` (`email_log_id`, `user_id`, `email_type`, `subject`, `body`, `sent_at`, `status`) VALUES
+(1, 2, 'Reservation', 'Foglalás visszaigazolás', 'A foglalásod sikeresen rögzítve lett.', '2025-12-03 17:50:52', 'Sent');
+
 -- --------------------------------------------------------
 
 --
@@ -51,6 +58,14 @@ CREATE TABLE `halls` (
   `location` varchar(255) DEFAULT NULL,
   `seating_capacity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `halls`
+--
+
+INSERT INTO `halls` (`hall_id`, `name`, `location`, `seating_capacity`) VALUES
+(1, 'Főterem', '1. emelet', 100),
+(2, 'Kisterem', '2. emelet', 50);
 
 -- --------------------------------------------------------
 
@@ -69,6 +84,14 @@ CREATE TABLE `movies` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `movies`
+--
+
+INSERT INTO `movies` (`movie_id`, `title`, `genre`, `duration`, `rating`, `description`, `release_date`, `created_at`) VALUES
+(1, 'Avatar', 'Sci-Fi', 162, 'PG-13', 'Sci-Fi kalandfilm', '2009-12-18', '2025-12-03 17:50:52'),
+(2, 'Joker', 'Drama', 122, 'R', 'Thriller/dráma', '2019-10-04', '2025-12-03 17:50:52');
+
 -- --------------------------------------------------------
 
 --
@@ -85,6 +108,14 @@ CREATE TABLE `payments` (
   `transaction_reference` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `payments`
+--
+
+INSERT INTO `payments` (`payment_id`, `reservation_id`, `payment_method`, `amount`, `payment_status`, `payment_date`, `transaction_reference`) VALUES
+(1, 1, 'Credit Card', 25.00, 'Paid', '2025-12-03 17:50:52', NULL),
+(2, 2, 'PayPal', 12.50, 'Pending', '2025-12-03 17:50:52', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -99,6 +130,14 @@ CREATE TABLE `reservations` (
   `status` varchar(50) DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `reservations`
+--
+
+INSERT INTO `reservations` (`reservation_id`, `user_id`, `showtime_id`, `reservation_date`, `status`) VALUES
+(1, 2, 1, '2025-12-03 17:50:52', 'confirmed'),
+(2, 2, 2, '2025-12-03 17:50:52', 'pending');
+
 -- --------------------------------------------------------
 
 --
@@ -110,6 +149,15 @@ CREATE TABLE `reservedseats` (
   `reservation_id` int(11) NOT NULL,
   `seat_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `reservedseats`
+--
+
+INSERT INTO `reservedseats` (`reserved_seat_id`, `reservation_id`, `seat_id`) VALUES
+(1, 1, 1),
+(2, 1, 3),
+(3, 2, 4);
 
 -- --------------------------------------------------------
 
@@ -123,6 +171,17 @@ CREATE TABLE `seats` (
   `seat_number` varchar(10) NOT NULL,
   `is_vip` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `seats`
+--
+
+INSERT INTO `seats` (`seat_id`, `hall_id`, `seat_number`, `is_vip`) VALUES
+(1, 1, 'A1', 0),
+(2, 1, 'A2', 0),
+(3, 1, 'A3', 1),
+(4, 2, 'B1', 0),
+(5, 2, 'B2', 0);
 
 -- --------------------------------------------------------
 
@@ -139,6 +198,14 @@ CREATE TABLE `showtimes` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `showtimes`
+--
+
+INSERT INTO `showtimes` (`showtime_id`, `movie_id`, `hall_id`, `show_date`, `show_time`, `created_at`) VALUES
+(1, 1, 1, '2025-12-05', '18:00:00', '2025-12-03 17:50:52'),
+(2, 2, 2, '2025-12-05', '20:00:00', '2025-12-03 17:50:52');
+
 -- --------------------------------------------------------
 
 --
@@ -152,6 +219,15 @@ CREATE TABLE `tickets` (
   `issued_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- A tábla adatainak kiíratása `tickets`
+--
+
+INSERT INTO `tickets` (`ticket_id`, `reservation_id`, `ticket_code`, `issued_date`) VALUES
+(1, 1, 'TICKET-001', '2025-12-03 17:50:52'),
+(2, 1, 'TICKET-002', '2025-12-03 17:50:52'),
+(3, 2, 'TICKET-003', '2025-12-03 17:50:52');
+
 -- --------------------------------------------------------
 
 --
@@ -163,6 +239,14 @@ CREATE TABLE `userroles` (
   `role_name` varchar(50) NOT NULL,
   `description` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `userroles`
+--
+
+INSERT INTO `userroles` (`role_id`, `role_name`, `description`) VALUES
+(1, 'Admin', 'Rendszergazda'),
+(2, 'Customer', 'Vásárló');
 
 -- --------------------------------------------------------
 
@@ -179,6 +263,14 @@ CREATE TABLE `users` (
   `password_hash` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- A tábla adatainak kiíratása `users`
+--
+
+INSERT INTO `users` (`user_id`, `role_id`, `name`, `email`, `phone`, `password_hash`, `created_at`) VALUES
+(1, 1, 'Kovács János', 'janos.kovacs@example.com', '06701234567', 'hash1', '2025-12-03 17:50:52'),
+(2, 2, 'Nagy Éva', 'eva.nagy@example.com', '06707654321', 'hash2', '2025-12-03 17:50:52');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -272,67 +364,67 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT a táblához `emaillogs`
 --
 ALTER TABLE `emaillogs`
-  MODIFY `email_log_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `email_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT a táblához `halls`
 --
 ALTER TABLE `halls`
-  MODIFY `hall_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `hall_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `movies`
 --
 ALTER TABLE `movies`
-  MODIFY `movie_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `movie_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `reservedseats`
 --
 ALTER TABLE `reservedseats`
-  MODIFY `reserved_seat_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `reserved_seat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT a táblához `seats`
 --
 ALTER TABLE `seats`
-  MODIFY `seat_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `seat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT a táblához `showtimes`
 --
 ALTER TABLE `showtimes`
-  MODIFY `showtime_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `showtime_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `tickets`
 --
 ALTER TABLE `tickets`
-  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ticket_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT a táblához `userroles`
 --
 ALTER TABLE `userroles`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Megkötések a kiírt táblákhoz
