@@ -71,7 +71,7 @@ namespace MozizzAPI.Controllers
                     
                     if (movie == null)
                     {
-                        return NotFound("Nincs ilyen Film!");
+                        return NotFound("Nincs ilyen Film");
                     }
 
                     var showtimes = context.Showtimes.Where(s => s.MovieId == movie.MovieId).ToList();
