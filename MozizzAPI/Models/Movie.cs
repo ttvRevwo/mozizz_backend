@@ -21,5 +21,5 @@ public partial class Movie
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
+    public virtual ICollection<Showtime>? Showtimes { get; set; } = new List<Showtime>();
 }
