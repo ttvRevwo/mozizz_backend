@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace MozizzAPI.Models;
 
@@ -10,7 +9,6 @@ public partial class MozizzContext : DbContext
     public MozizzContext()
     {
     }
-
 
     public MozizzContext(DbContextOptions<MozizzContext> options)
         : base(options)
@@ -37,31 +35,16 @@ public partial class MozizzContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<UserVerification> UserVerifications { get; set; }
+
     public virtual DbSet<Userrole> Userroles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
-
-            optionsBuilder.UseMySQL(configuration.GetConnectionString("MozizzConnection"));
-        }
-    }
-
-      
-
-
+        => optionsBuilder.UseMySQL("server=localhost;database=mozizz;user=root;password=");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-        
-
         modelBuilder.Entity<Emaillog>(entity =>
         {
             entity.HasKey(e => e.EmailLogId).HasName("PRIMARY");
@@ -401,6 +384,26 @@ public partial class MozizzContext : DbContext
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .HasConstraintName("users_ibfk_1");
+        });
+
+        modelBuilder.Entity<UserVerification>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("user_verifications");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("id");
+            entity.Property(e => e.Code)
+                .HasMaxLength(6)
+                .HasColumnName("code");
+            entity.Property(e => e.Email)
+                .HasMaxLength(255)
+                .HasColumnName("email");
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnType("datetime")
+                .HasColumnName("expires_at");
         });
 
         modelBuilder.Entity<Userrole>(entity =>
