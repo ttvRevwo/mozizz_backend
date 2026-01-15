@@ -1,7 +1,5 @@
-﻿
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MozizzAPI.DTOS;
+﻿using Microsoft.AspNetCore.Mvc;
+using MozizzAPI.DTOS; 
 using MozizzAPI.Models;
 using System.Net;
 using System.Net.Mail;
@@ -12,114 +10,94 @@ namespace MozizzAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        
+        private readonly MozizzContext _context;
+        private readonly IConfiguration _configuration;
+
+        public AuthController(MozizzContext context, IConfiguration configuration)
+        {
+            _context = context;
+            _configuration = configuration;
+        }
+
         [HttpPost("RegisterRequest")]
         public IActionResult RegisterRequest([FromBody] RegisterDto dto)
         {
-            using (var context = new MozizzContext())
+            try
             {
-                try
+                if (_context.Users.Any(u => u.Email == dto.Email))
+                    return BadRequest("Ez az email már regisztrálva van!");
+
+                string code = new Random().Next(100000, 999999).ToString();
+                var expiry = DateTime.Now.AddMinutes(5);
+
+                var existing = _context.UserVerifications.FirstOrDefault(v => v.Email == dto.Email);
+                if (existing != null)
                 {
-                    
-                    if (context.Users.Any(u => u.Email == dto.Email))
-                    {
-                        return BadRequest("Ez az email cím már foglalt!");
-                    }
-
-                    string verificationCode = new Random().Next(100000, 999999).ToString();
-                    var expiry = DateTime.Now.AddMinutes(5);
-
-                    var existing = context.UserVerifications.FirstOrDefault(v => v.Email == dto.Email);
-                    if (existing != null)
-                    {
-                        existing.Code = verificationCode;
-                        existing.ExpiresAt = expiry;
-                    }
-                    else
-                    {
-                        context.UserVerifications.Add(new UserVerification
-                        {
-                            Email = dto.Email,
-                            Code = verificationCode,
-                            ExpiresAt = expiry
-                        });
-                    }
-
-                    context.SaveChanges();
-                    SendGmail(dto.Email, verificationCode);
-
-                    return Ok("Kód elküldve!");
+                    existing.Code = code;
+                    existing.ExpiresAt = expiry;
+                    _context.UserVerifications.Update(existing);
                 }
-                catch (Exception ex)
+                else
                 {
-                    return BadRequest(ex.Message);
+                    _context.UserVerifications.Add(new UserVerification { Email = dto.Email, Code = code, ExpiresAt = expiry });
                 }
+
+                _context.SaveChanges();
+                SendGmail(dto.Email, code);
+
+                return Ok("Kód elküldve!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
-
 
         [HttpPost("VerifyAndRegister")]
         public IActionResult VerifyAndRegister(string email, string code, [FromBody] RegisterDto dto)
         {
-            using (var context = new MozizzContext())
+            var auth = _context.UserVerifications.FirstOrDefault(v => v.Email == email && v.Code == code);
+
+            if (auth == null || auth.ExpiresAt < DateTime.Now)
+                return BadRequest("Hibás vagy lejárt kód!");
+
+            var finalUser = new User
             {
-                var auth = context.UserVerifications.FirstOrDefault(v => v.Email == email && v.Code == code);
+                Name = dto.Name,
+                Email = dto.Email,
+                PasswordHash = dto.Password, 
+                Phone = dto.Phone,
+                RoleId = 2 
+            };
 
-                if (auth != null && auth.ExpiresAt > DateTime.Now)
-                {
-                    
-                    var finalUser = new User
-                    {
-                        Name = dto.Name,
-                        Email = dto.Email,
-                        PasswordHash = dto.Password, 
-                        RoleId = 2 
-                    };
+            _context.Users.Add(finalUser);
+            _context.UserVerifications.Remove(auth);
+            _context.SaveChanges();
 
-                    context.Users.Add(finalUser); 
-                    context.UserVerifications.Remove(auth); 
-                    context.SaveChanges(); 
-
-                    return Ok("Sikeres registracio!");
-                }
-                return BadRequest("Hibás kód!");
-            }
+            return Ok("Sikeres regisztráció!");
         }
 
-       
         private void SendGmail(string targetEmail, string code)
         {
-            var fromAddress = new MailAddress("dinofordrive@gmail.com", "Mozizz Rendszer");
-            var toAddress = new MailAddress(targetEmail);
-            const string fromPassword = "#############################"; // Google App Password!
-            const string subject = "Mozizz - Regisztrációs kód";
-            string body = $@"
-                <h3>Üdvözlünk a Mozizz alkalmazásban!</h3>
-                <p>A regisztrációd befejezéséhez kérjük használd az alábbi 6 jegyű kódot:</p>
-                <h2 style='color:blue;'>{code}</h2>
-                <p>A kód 5 percig érvényes.</p>
-                <p>Ha nem te indítottad a regisztrációt, kérjük hagyd figyelmen kívül ezt az üzenetet.</p>";
-
+            var emailConfig = _configuration.GetSection("EmailSettings");
+            var fromAddress = new MailAddress(emailConfig["Email"], "Mozizz Cinema");
             var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
                 Port = 587,
                 EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(fromAddress.Address, fromPassword)
+                Credentials = new NetworkCredential(emailConfig["Email"], emailConfig["Password"])
             };
 
-            using (var message = new MailMessage(fromAddress, toAddress)
+            using (var message = new MailMessage(fromAddress, new MailAddress(targetEmail))
             {
-                Subject = subject,
-                Body = body,
+                Subject = "Regisztrációs kód",
+                Body = $"A kódod: {code}",
                 IsBodyHtml = true
             })
             {
                 smtp.Send(message);
             }
         }
-
     }
 }

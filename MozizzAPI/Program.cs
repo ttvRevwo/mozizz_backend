@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using MozizzAPI.Models;
 using System.Text.Json.Serialization;
 
 namespace MozizzAPI
@@ -10,6 +10,7 @@ namespace MozizzAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
+           
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("ReactPolicy", policy =>
@@ -20,13 +21,21 @@ namespace MozizzAPI
                 });
             });
 
-            builder.Services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            
+            var connectionString = builder.Configuration.GetConnectionString("MozizzConnection");
+            builder.Services.AddDbContext<MozizzContext>(options =>
+                options.UseMySQL(connectionString));
+
+           
+            builder.Services.AddControllers().AddJsonOptions(x =>
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
+           
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -35,6 +44,7 @@ namespace MozizzAPI
 
             app.UseHttpsRedirection();
 
+            
             app.UseCors("ReactPolicy");
 
             app.UseAuthorization();
