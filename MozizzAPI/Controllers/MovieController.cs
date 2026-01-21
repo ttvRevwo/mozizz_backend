@@ -2,6 +2,7 @@
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MozizzAPI.DTOS;
 using MozizzAPI.Models;
 
 namespace MozizzAPI.Controllers
@@ -112,52 +113,43 @@ namespace MozizzAPI.Controllers
 
 
         [HttpPut("ModifyMovie")]
-        public async Task<IActionResult> ModifyMovie([FromForm] Movie movie, IFormFile? imageFile)
+        public async Task<IActionResult> ModifyMovie([FromForm] MovieDto movieDto)
         {
             try
             {
-                
-                var m = _context.Movies.FirstOrDefault(x => x.MovieId == movie.MovieId);
-                if (m == null) return NotFound("Nem található a módosítani kívánt film.");
+                var m = _context.Movies.FirstOrDefault(x => x.MovieId == movieDto.MovieId);
+                if (m == null) return NotFound("Film nem található.");
 
-                
-                m.Title = movie.Title;
-                m.Description = movie.Description;
-
-                if (imageFile != null)
+                _context.Entry(m).CurrentValues.SetValues(movieDto);
+               
+                if (movieDto.ImageFile != null)
                 {
-                    
                     if (!string.IsNullOrEmpty(m.Img))
                     {
-                        
                         var oldPublicId = m.Img.Contains(".") ? m.Img.Split('.')[0] : m.Img;
                         await _cloudinary.DestroyAsync(new DeletionParams(oldPublicId));
                     }
 
-                   
-                    using var stream = imageFile.OpenReadStream();
+                    using var stream = movieDto.ImageFile.OpenReadStream();
                     var uploadParams = new ImageUploadParams()
                     {
-                        File = new FileDescription(imageFile.FileName, stream),
+                        File = new FileDescription(movieDto.ImageFile.FileName, stream),
                         Folder = "movies",
-                        UseFilename = true,     
-                        UniqueFilename = false,  
-                        Overwrite = true         
+                        UseFilename = true,
+                        UniqueFilename = false,
+                        Overwrite = true
                     };
 
                     var uploadResult = await _cloudinary.UploadAsync(uploadParams);
-
-                   
                     m.Img = uploadResult.PublicId + "." + uploadResult.Format;
                 }
 
-                _context.Movies.Update(m);
                 _context.SaveChanges();
-                return Ok(new { üzenet = "Sikeres módosítás!", uj_fajlnev = m.Img });
+                return Ok(new { uzenet = "Sikeres módosítás!", film = m });
             }
             catch (Exception ex)
             {
-                return BadRequest($"Hiba a módosítás közben: {ex.Message}");
+                return BadRequest($"Hiba: {ex.Message}");
             }
         }
     }
