@@ -27,18 +27,27 @@ namespace MozizzAPI.Controllers
             }
         }
 
-        [HttpPost("NewUser")]
-        public IActionResult NewUser(User user)
+        
+
+        [HttpPut("ModifyUser")]
+        public IActionResult ModifyUser(User user)
         {
-            try
+            using (var context = new MozizzContext())
             {
-                _context.Users.Add(user);
-                _context.SaveChanges();
-                return Ok("Sikeres rögzítés!");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"Hiba: {ex.Message}");
+                try
+                {
+                    if (context.Users.Select(u => u.UserId).Contains(user.UserId))
+                    {
+                        context.Users.Update(user);
+                        context.SaveChanges();
+                    }
+                    ;
+                    return Ok("Sikeres módosítás.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest($"Hiba a módosítás közben: {ex.Message}");
+                }
             }
         }
 

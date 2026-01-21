@@ -24,6 +24,8 @@ namespace MozizzAPI.Controllers
         {
             try
             {
+                var expiredCodes = _context.UserVerifications.Where(v => v.ExpiresAt < DateTime.Now);
+                _context.UserVerifications.RemoveRange(expiredCodes);
                 if (_context.Users.Any(u => u.Email == dto.Email))
                     return BadRequest("Ez az email már regisztrálva van!");
 
@@ -61,6 +63,13 @@ namespace MozizzAPI.Controllers
             if (auth == null || auth.ExpiresAt < DateTime.Now)
                 return BadRequest("Hibás vagy lejárt kód!");
 
+            if (auth.ExpiresAt < DateTime.Now)
+            {
+                _context.UserVerifications.Remove(auth);
+                _context.SaveChanges();
+                return BadRequest("A kód lejárt! Kérj újat.");
+            }
+
             var finalUser = new User
             {
                 Name = dto.Name,
@@ -80,19 +89,41 @@ namespace MozizzAPI.Controllers
         private void SendGmail(string targetEmail, string code)
         {
             var emailConfig = _configuration.GetSection("EmailSettings");
-            var fromAddress = new MailAddress(emailConfig["Email"], "Mozizz Cinema");
+            string senderEmail = emailConfig["Email"];
+            string appPassword = emailConfig["Password"];
+
+            var fromAddress = new MailAddress(senderEmail, "Mozizz Cinema");
+            var toAddress = new MailAddress(targetEmail);
+
+            const string subject = "Regisztrációs kód - Mozizz";
+
+            // AZ ÚJ FORMÁZOTT SZÖVEG:
+            string body = $@"
+                <div style='font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; border-radius: 10px; max-width: 500px;'>
+                    <h3 style='color: #333;'>Üdvözlünk a Mozizz alkalmazásban!</h3>
+                    <p>A regisztrációd befejezéséhez kérjük használd az alábbi 6 jegyű kódot:</p>
+                    <div style='background-color: #f4f4f4; padding: 15px; text-align: center; border-radius: 5px;'>
+                        <h2 style='color: blue; letter-spacing: 5px; margin: 0;'>{code}</h2>
+                    </div>
+                    <p style='color: #666; font-size: 14px; margin-top: 20px;'>A kód 5 percig érvényes.</p>
+                    <hr style='border: 0; border-top: 1px solid #eee;'>
+                    <p style='color: #999; font-size: 12px;'>Ha nem te indítottad a regisztrációt, kérjük hagyd figyelmen kívül ezt az üzenetet.</p>
+                </div>";
+
             var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
                 Port = 587,
                 EnableSsl = true,
-                Credentials = new NetworkCredential(emailConfig["Email"], emailConfig["Password"])
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(senderEmail, appPassword)
             };
 
-            using (var message = new MailMessage(fromAddress, new MailAddress(targetEmail))
+            using (var message = new MailMessage(fromAddress, toAddress)
             {
-                Subject = "Regisztrációs kód",
-                Body = $"A kódod: {code}",
+                Subject = subject,
+                Body = body,
                 IsBodyHtml = true
             })
             {
