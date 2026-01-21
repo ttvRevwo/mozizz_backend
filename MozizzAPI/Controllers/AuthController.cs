@@ -19,6 +19,45 @@ namespace MozizzAPI.Controllers
             _configuration = configuration;
         }
 
+
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] LoginDto dto)
+        {
+            try
+            {
+                
+                var user = _context.Users
+                    .FirstOrDefault(u => u.Email == dto.Email);
+
+                if (user == null)
+                {
+                    return BadRequest("Hibás email cím vagy jelszó!");
+                }
+
+                
+                if (user.PasswordHash != dto.Password)
+                {
+                    return BadRequest("Hibás email cím vagy jelszó!");
+                }
+
+              
+                return Ok(new
+                {
+                    message = "Sikeres bejelentkezés!",
+                    userId = user.UserId,
+                    name = user.Name,
+                    email = user.Email,
+                    roleId = user.RoleId
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba a bejelentkezés során: {ex.Message}");
+            }
+        }
+
+
+
         [HttpPost("RegisterRequest")]
         public IActionResult RegisterRequest([FromBody] RegisterDto dto)
         {
@@ -97,7 +136,7 @@ namespace MozizzAPI.Controllers
 
             const string subject = "Regisztrációs kód - Mozizz";
 
-            // AZ ÚJ FORMÁZOTT SZÖVEG:
+           
             string body = $@"
                 <div style='font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; border-radius: 10px; max-width: 500px;'>
                     <h3 style='color: #333;'>Üdvözlünk a Mozizz alkalmazásban!</h3>
