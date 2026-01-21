@@ -9,57 +9,99 @@ namespace MozizzAPI.Controllers
     {
         private readonly MozizzContext _context;
 
+      
         public UserController(MozizzContext context)
         {
             _context = context;
         }
 
-        [HttpGet("User")]
+   
+        [HttpGet("GetAllUsers")]
         public IActionResult GetAllUsers()
         {
             try
             {
-                return Ok(_context.Users.ToList());
+                var felhasznalok = _context.Users.ToList();
+                return Ok(felhasznalok);
             }
             catch (Exception ex)
             {
-                return BadRequest(new List<User> { new User { UserId = -1, Name = $"Hiba: {ex.Message}" } });
+                return BadRequest(new { üzenet = "Hiba a lekérdezés során", hiba = ex.Message });
+            }
+        }
+
+      
+        [HttpGet("UserById/{id}")]
+        public IActionResult GetUserById(int id)
+        {
+            try
+            {
+                var user = _context.Users.FirstOrDefault(u => u.UserId == id);
+                if (user == null) return NotFound("Nincs ilyen felhasználó!");
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
         
-
-        [HttpPut("ModifyUser")]
-        public IActionResult ModifyUser(User user)
+        
+        [HttpDelete("DeleteUser/{id}")]
+        public IActionResult DeleteUser(int id)
         {
-            using (var context = new MozizzContext())
+            try
             {
-                try
-                {
-                    if (context.Users.Select(u => u.UserId).Contains(user.UserId))
-                    {
-                        context.Users.Update(user);
-                        context.SaveChanges();
-                    }
-                    ;
-                    return Ok("Sikeres módosítás.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest($"Hiba a módosítás közben: {ex.Message}");
-                }
+                var user = _context.Users.FirstOrDefault(f => f.UserId == id);
+                if (user == null) return NotFound("Nincs ilyen felhasználó!");
+
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+                return Ok("Felhasználó sikeresen törölve.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba a törlés közben: {ex.Message}");
             }
         }
 
-        [HttpDelete("DeleteUser")]
-        public IActionResult DeleteUser(int id)
+        
+        [HttpPut("ModifyUser")]
+        public IActionResult ModifyUser(User user)
         {
-            var user = _context.Users.FirstOrDefault(f => f.UserId == id);
-            if (user == null) return BadRequest("Nincs ilyen felhasználó!");
+            try
+            {
+                var létezik = _context.Users.Any(u => u.UserId == user.UserId);
+                if (!létezik) return NotFound("Nem található a módosítani kívánt felhasználó.");
 
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-            return Ok("Törölve.");
+                _context.Users.Update(user);
+                _context.SaveChanges();
+                return Ok("Sikeres módosítás.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba a módosítás közben: {ex.Message}");
+            }
+        }
+
+        
+        [HttpDelete("CleanupVerificationCodes")]
+        public IActionResult CleanupCodes()
+        {
+            try
+            {
+                var lejártak = _context.UserVerifications.Where(v => v.ExpiresAt < DateTime.Now);
+                int darab = lejártak.Count();
+                _context.UserVerifications.RemoveRange(lejártak);
+                _context.SaveChanges();
+                return Ok($"{darab} lejárt kód törölve az adatbázisból.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

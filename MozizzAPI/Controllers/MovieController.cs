@@ -8,12 +8,12 @@ namespace MozizzAPI.Controllers
     public class MovieController : Controller
     {
         private readonly MozizzContext _context;
-
         public MovieController(MozizzContext context)
         {
             _context = context;
         }
 
+       
         [HttpGet("GetMovies")]
         public IActionResult GetAllMovies()
         {
@@ -24,47 +24,80 @@ namespace MozizzAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new List<Movie> { new Movie { MovieId = -1, Description = $"Hiba: {ex.Message}" } });
+              
+                return BadRequest(new List<Movie> {
+                    new Movie { MovieId = -1, Title = "Hiba", Description = ex.Message }
+                });
             }
         }
 
-        [HttpGet("MovieById")]
+        [HttpGet("MovieById/{id}")]
         public IActionResult GetMovieById(int id)
-        {
-            var valasz = _context.Movies.FirstOrDefault(u => u.MovieId == id);
-            return valasz != null ? Ok(valasz) : BadRequest("Nincs ilyen film.");
-        }
-
-        [HttpDelete("DeleteMovie")]
-        public IActionResult DeleteMovie(int id)
         {
             try
             {
-                var movie = _context.Movies.FirstOrDefault(f => f.MovieId == id);
-                if (movie == null) return BadRequest("Nincs ilyen film.");
+                var film = _context.Movies.FirstOrDefault(m => m.MovieId == id);
+                if (film == null) return NotFound("A kért film nem található.");
 
-                _context.Movies.Remove(movie);
-                _context.SaveChanges();
-                return Ok("Sikeres törlés.");
+                return Ok(film);
             }
             catch (Exception ex)
             {
-                return BadRequest("Hiba: " + ex.Message);
+                return BadRequest(ex.Message);
             }
         }
 
+        
         [HttpPost("NewMovie")]
-        public IActionResult NewMovie(Movie movie)
+        public IActionResult NewMovie([FromBody] Movie movie)
         {
             try
             {
                 _context.Movies.Add(movie);
                 _context.SaveChanges();
-                return Ok("Sikeres rögzítés!");
+                return Ok(new { üzenet = "Sikeres rögzítés!", id = movie.MovieId });
             }
             catch (Exception ex)
             {
-                return BadRequest($"Hiba: {ex.Message}");
+                return BadRequest($"Hiba a rögzítés közben: {ex.Message}");
+            }
+        }
+
+       
+        [HttpDelete("DeleteMovie/{id}")]
+        public IActionResult DeleteMovie(int id)
+        {
+            try
+            {
+                var movie = _context.Movies.FirstOrDefault(m => m.MovieId == id);
+                if (movie == null) return NotFound("Nincs ilyen film az adatbázisban.");
+
+                _context.Movies.Remove(movie);
+                _context.SaveChanges();
+                return Ok("A film és a hozzá kapcsolódó adatok törölve.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba a törlés során: {ex.Message}");
+            }
+        }
+
+       
+        [HttpPut("ModifyMovie")]
+        public IActionResult ModifyMovie([FromBody] Movie movie)
+        {
+            try
+            {
+                var létezik = _context.Movies.Any(m => m.MovieId == movie.MovieId);
+                if (!létezik) return NotFound("Nem található a módosítani kívánt film.");
+
+                _context.Movies.Update(movie);
+                _context.SaveChanges();
+                return Ok("A film adatai sikeresen frissítve.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba a módosítás közben: {ex.Message}");
             }
         }
     }
