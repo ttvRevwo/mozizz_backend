@@ -48,5 +48,24 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("DeleteHall/{id}")]
+        public IActionResult DelethallById(int id)
+        {
+            try
+            {
+                var terem = _context.Halls.FirstOrDefault(t=>t.HallId == id);
+                if(terem == null) return NotFound("Nincs ilyen terem!");
+                _context.Halls.Remove(terem);
+                _context.SaveChanges();
+                return Ok("Sikeres törlés!");
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
