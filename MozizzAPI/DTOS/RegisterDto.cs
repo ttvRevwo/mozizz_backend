@@ -2,9 +2,9 @@
 {
     public class RegisterDto
     {
-        public string Name { get; set; } = null!;
-        public string Email { get; set; } = null!;
-        public string Password { get; set; } = null!;
-        public string? Phone { get; set; }
+        public required string Name { get; set; } = null!;
+        public required string Email { get; set; } = null!;
+        public required string Password { get; set; } = null!;
+        public required string? Phone { get; set; }
     }
 }
