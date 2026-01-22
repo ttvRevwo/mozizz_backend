@@ -67,5 +67,24 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost("ModifyHall")]
+        public IActionResult ModifyHall(Hall hall)
+        {
+            try
+            {
+               var terem = _context.Halls.FirstOrDefault(t => t.HallId == hall.HallId);
+                if(terem == null) return NotFound("Nincs ilyen terem!");
+                terem.Name = hall.Name;
+                terem.Location = hall.Location;
+                terem.SeatingCapacity = hall.SeatingCapacity;
+                _context.SaveChanges();
+                return Ok("Sikeres módosítás!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
