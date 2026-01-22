@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MozizzAPI.Models;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 
 namespace MozizzAPI.Controllers
 {
@@ -29,6 +30,23 @@ namespace MozizzAPI.Controllers
                 return BadRequest(new { üzenet = "Hiba a lekérdezés során", hiba = ex.Message });
             }
 
+        }
+
+        [HttpGet("HallById/{id}")]
+
+        public IActionResult GetHallById(int id)
+        {
+            try
+            {
+                var terem = _context.Halls.FirstOrDefault(t => t.HallId == id);
+                if(terem == null) return NotFound("Nincs ilyen terem!");
+                return Ok(terem);
+               
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
