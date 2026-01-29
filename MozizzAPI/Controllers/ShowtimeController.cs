@@ -41,5 +41,32 @@ namespace MozizzAPI.Controllers
                 return BadRequest(new { hiba = ex.Message });
             }
         }
+
+
+        [HttpGet("GetByMovie/{movieId}")]
+        public IActionResult GetByMovie(int movieId)
+        {
+            try
+            {
+                var result = _context.Showtimes
+                    .Where(s => s.MovieId == movieId) 
+                    .Include(s => s.Hall)
+                    .Select(s => new {
+                        s.ShowtimeId,
+                        s.ShowDate,
+                        s.ShowTime1,
+                        HallName = s.Hall.Name
+                    })
+                    .OrderBy(s => s.ShowDate)
+                    .ThenBy(s => s.ShowTime1)
+                    .ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
