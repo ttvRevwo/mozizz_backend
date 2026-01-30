@@ -68,5 +68,48 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpGet("GetById/{id}")]
+        public IActionResult GetById(int id)
+        {
+            try
+            {
+                var showtime = _context.Showtimes
+                    .Include(s => s.Movie)
+                    .Include(s => s.Hall)
+                    .FirstOrDefault(s => s.ShowtimeId == id);
+
+                if (showtime == null) return NotFound("A vetítés nem található.");
+
+                return Ok(new
+                {
+                    showtime.ShowtimeId,
+                    MovieTitle = showtime.Movie.Title,
+                    HallName = showtime.Hall.Name,
+                    Date = showtime.ShowDate,
+                    Time = showtime.ShowTime1
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("NewShowtime")]
+        public IActionResult Create(Showtime showtime)
+        {
+            try
+            {
+                _context.Showtimes.Add(showtime);
+                _context.SaveChanges();
+                return Ok(new { uzenet = "Vetítés sikeresen rögzítve!", id = showtime.ShowtimeId });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba a mentés során: {ex.Message}");
+            }
+        }
     }
 }
