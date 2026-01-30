@@ -102,14 +102,48 @@ namespace MozizzAPI.Controllers
         {
             try
             {
+                var movieExists = _context.Movies.Any(m => m.MovieId == showtime.MovieId);
+                var hallExists = _context.Halls.Any(h => h.HallId == showtime.HallId);
+
+                if (!movieExists || !hallExists)
+                    return BadRequest("Érvénytelen MovieId vagy HallId!");
+
                 _context.Showtimes.Add(showtime);
                 _context.SaveChanges();
-                return Ok(new { uzenet = "Vetítés sikeresen rögzítve!", id = showtime.ShowtimeId });
+
+                return CreatedAtAction(nameof(GetById), new { id = showtime.ShowtimeId }, showtime);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Hiba a mentés során: {ex.Message}");
+                return BadRequest($"Hiba a mentésnél: {ex.Message}");
             }
         }
+        [HttpPut("ModifyShowtime")]
+        public IActionResult ModifyShowtime(Showtime updatedShowtime)
+        {
+            try
+            {            
+                var existingShowtime = _context.Showtimes.FirstOrDefault(s => s.ShowtimeId == updatedShowtime.ShowtimeId);
+
+                if (existingShowtime == null)
+                    return NotFound("A módosítani kívánt vetítés nem található.");
+
+                var movieExists = _context.Movies.Any(m => m.MovieId == updatedShowtime.MovieId);
+                var hallExists = _context.Halls.Any(h => h.HallId == updatedShowtime.HallId);
+
+                if (!movieExists || !hallExists)
+                    return BadRequest("Érvénytelen MovieId vagy HallId!");
+
+                _context.Entry(existingShowtime).CurrentValues.SetValues(updatedShowtime);
+                _context.SaveChanges();
+
+                return Ok(new { uzenet = "Sikeres módosítás!", adat = existingShowtime });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { hiba = ex.Message });
+            }
+        }
+
     }
 }
