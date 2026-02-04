@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
+using System.Net.Mail;
+using Microsoft.AspNetCore.Mvc;
 using MozizzAPI.DTOS; 
 using MozizzAPI.Models;
-using System.Net;
-using System.Net.Mail;
+using Org.BouncyCastle.Crypto.Generators;
 
 namespace MozizzAPI.Controllers
 {
@@ -25,22 +26,17 @@ namespace MozizzAPI.Controllers
         {
             try
             {
-                
-                var user = _context.Users
-                    .FirstOrDefault(u => u.Email == dto.Email);
+                var user = _context.Users.FirstOrDefault(u => u.Email == dto.Email);
+            
+                if (user == null) return BadRequest("Hibás email cím vagy jelszó!");
 
-                if (user == null)
+                bool isValidPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+
+                if (!isValidPassword)
                 {
                     return BadRequest("Hibás email cím vagy jelszó!");
                 }
 
-                
-                if (user.PasswordHash != dto.Password)
-                {
-                    return BadRequest("Hibás email cím vagy jelszó!");
-                }
-
-              
                 return Ok(new
                 {
                     message = "Sikeres bejelentkezés!",
@@ -55,7 +51,6 @@ namespace MozizzAPI.Controllers
                 return BadRequest($"Hiba a bejelentkezés során: {ex.Message}");
             }
         }
-
 
 
         [HttpPost("RegisterRequest")]
@@ -102,20 +97,15 @@ namespace MozizzAPI.Controllers
             if (auth == null || auth.ExpiresAt < DateTime.Now)
                 return BadRequest("Hibás vagy lejárt kód!");
 
-            if (auth.ExpiresAt < DateTime.Now)
-            {
-                _context.UserVerifications.Remove(auth);
-                _context.SaveChanges();
-                return BadRequest("A kód lejárt! Kérj újat.");
-            }
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var finalUser = new User
             {
                 Name = dto.Name,
                 Email = dto.Email,
-                PasswordHash = dto.Password, 
+                PasswordHash = hashedPassword,
                 Phone = dto.Phone,
-                RoleId = 2 
+                RoleId = 2
             };
 
             _context.Users.Add(finalUser);
@@ -124,7 +114,6 @@ namespace MozizzAPI.Controllers
 
             return Ok("Sikeres regisztráció!");
         }
-
         private void SendGmail(string targetEmail, string code)
         {
             var emailConfig = _configuration.GetSection("EmailSettings");
