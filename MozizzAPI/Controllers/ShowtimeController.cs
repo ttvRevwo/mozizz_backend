@@ -25,7 +25,8 @@ namespace MozizzAPI.Controllers
                 var showtimes = _context.Showtimes
                     .Include(s => s.Movie)
                     .Include(s => s.Hall)
-                    .Select(s => new {
+                    .Select(s => new
+                    {
                         s.ShowtimeId,
                         MovieTitle = s.Movie.Title,
                         HallName = s.Hall.Name,
@@ -49,9 +50,10 @@ namespace MozizzAPI.Controllers
             try
             {
                 var result = _context.Showtimes
-                    .Where(s => s.MovieId == movieId) 
+                    .Where(s => s.MovieId == movieId)
                     .Include(s => s.Hall)
-                    .Select(s => new {
+                    .Select(s => new
+                    {
                         s.ShowtimeId,
                         s.ShowDate,
                         s.ShowTime1,
@@ -122,7 +124,7 @@ namespace MozizzAPI.Controllers
         public IActionResult ModifyShowtime(Showtime updatedShowtime)
         {
             try
-            {            
+            {
                 var existingShowtime = _context.Showtimes.FirstOrDefault(s => s.ShowtimeId == updatedShowtime.ShowtimeId);
 
                 if (existingShowtime == null)
@@ -145,5 +147,27 @@ namespace MozizzAPI.Controllers
             }
         }
 
+        [HttpDelete("DeleteShowtime/{id}")]
+        public IActionResult DeleteShowtime(int id)
+        {
+            try
+            {
+                var showtime = _context.Showtimes.FirstOrDefault(s => s.ShowtimeId == id);
+
+                if (showtime == null)
+                    return NotFound("A vetítés már nem létezik vagy már törölték.");
+
+                _context.Showtimes.Remove(showtime);
+                _context.SaveChanges();
+
+                return Ok(new { uzenet = "Vetítés sikeresen törölve!" });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { hiba = "A törlés nem sikerült. Valószínűleg már tartoznak foglalások ehhez a vetítéshez.", részletek = ex.Message });
+            }
+
+        }
     }
 }
