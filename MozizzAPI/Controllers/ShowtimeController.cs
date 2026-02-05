@@ -104,11 +104,20 @@ namespace MozizzAPI.Controllers
         {
             try
             {
+                
                 var movieExists = _context.Movies.Any(m => m.MovieId == showtime.MovieId);
                 var hallExists = _context.Halls.Any(h => h.HallId == showtime.HallId);
 
                 if (!movieExists || !hallExists)
                     return BadRequest("Érvénytelen MovieId vagy HallId!");
+
+                showtime.Movie = null;
+                showtime.Hall = null;
+
+                if (showtime.Reservations != null && showtime.Reservations.Count == 0)
+                {
+                    showtime.Reservations = null;
+                }
 
                 _context.Showtimes.Add(showtime);
                 _context.SaveChanges();
@@ -117,7 +126,8 @@ namespace MozizzAPI.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest($"Hiba a mentésnél: {ex.Message}");
+                var innerMessage = ex.InnerException != null ? ex.InnerException.Message : "";
+                return BadRequest($"Hiba a mentésnél: {ex.Message} {innerMessage}");
             }
         }
         [HttpPut("ModifyShowtime")]
