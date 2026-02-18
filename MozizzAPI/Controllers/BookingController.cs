@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MozizzAPI.DTOS;
 using MozizzAPI.Models;
 
@@ -98,6 +99,27 @@ namespace MozizzAPI.Controllers
                     return BadRequest($"Hiba a foglalás során: {ex.Message}");
                 }
             }
+        }
+        [HttpGet("GetUserReservations/{userId}")]
+        public IActionResult GetUserReservations(int userId)
+        {
+            var res = _context.Reservations
+                .Where(r => r.UserId == userId)
+                .Include(r => r.Showtime)
+                    .ThenInclude(s => s.Movie)
+                .Include(r => r.Reservedseats)
+                    .ThenInclude(rs => rs.Seat)
+                .Select(r => new {
+                    r.ReservationId,
+                    MovieTitle = r.Showtime.Movie.Title,
+                    Date = r.Showtime.ShowDate,
+                    Time = r.Showtime.ShowTime1,
+                    Seats = r.Reservedseats.Select(rs => rs.Seat.SeatNumber).ToList(),
+                    r.Status
+                })
+                .ToList();
+
+            return Ok(res);
         }
     }
 }
