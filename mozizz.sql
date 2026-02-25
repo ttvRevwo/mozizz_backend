@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Jan 15. 08:54
+-- Létrehozás ideje: 2026. Feb 25. 22:01
 -- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.2.12
+-- PHP verzió: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Adatbázis: `mozizz`
 --
-CREATE DATABASE IF NOT EXISTS `mozizz` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `mozizz`;
 
 -- --------------------------------------------------------
 
@@ -271,7 +269,8 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `role_id`, `name`, `email`, `phone`, `password_hash`, `created_at`) VALUES
 (1, 1, 'Kovács János', 'janos.kovacs@example.com', '06701234567', 'hash1', '2025-12-03 17:50:52'),
 (2, 2, 'Nagy Éva', 'eva.nagy@example.com', '06707654321', 'hash2', '2025-12-03 17:50:52'),
-(3, 2, 'steam', 'dinoforstea@gmail.com', NULL, 'szia', '2026-01-15 07:00:44');
+(3, 2, 'steam', 'dinoforstea@gmail.com', NULL, 'szia', '2026-01-15 07:00:44'),
+(4, 1, 'szia', 'tothr@kkszki.hu', '2222222', '$2a$11$h7jt4ENoXxKFNisbpDw5kORI0VQCMA5gBfneM6cX3AgYNBN/qVDKq', '2026-02-25 17:46:38');
 
 -- --------------------------------------------------------
 
@@ -285,14 +284,6 @@ CREATE TABLE `user_verifications` (
   `code` varchar(6) NOT NULL,
   `expires_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- A tábla adatainak kiíratása `user_verifications`
---
-
-INSERT INTO `user_verifications` (`id`, `email`, `code`, `expires_at`) VALUES
-(2, 'tothk4@kkszki.hu', '245464', '2026-01-15 08:23:17'),
-(3, 'tekulicsb@kkszki.hu', '324870', '2026-01-15 08:25:22');
 
 --
 -- Indexek a kiírt táblákhoz
@@ -452,13 +443,13 @@ ALTER TABLE `userroles`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT a táblához `user_verifications`
 --
 ALTER TABLE `user_verifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Megkötések a kiírt táblákhoz
