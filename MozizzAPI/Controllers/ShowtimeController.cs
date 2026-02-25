@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MozizzAPI.Models;
@@ -98,7 +99,7 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("NewShowtime")]
         public IActionResult Create(Showtime showtime)
         {
@@ -130,6 +131,7 @@ namespace MozizzAPI.Controllers
                 return BadRequest($"Hiba a mentésnél: {ex.Message} {innerMessage}");
             }
         }
+        [Authorize(Roles = "Admin")]
         [HttpPut("ModifyShowtime")]
         public IActionResult ModifyShowtime(Showtime updatedShowtime)
         {
@@ -156,7 +158,7 @@ namespace MozizzAPI.Controllers
                 return BadRequest(new { hiba = ex.Message });
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteShowtime/{id}")]
         public IActionResult DeleteShowtime(int id)
         {

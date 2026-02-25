@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MozizzAPI.Models;
 using Org.BouncyCastle.Bcpg.OpenPgp;
@@ -7,6 +8,7 @@ namespace MozizzAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class HallController : ControllerBase
     {
         private readonly MozizzContext _context;
@@ -48,7 +50,7 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteHall/{id}")]
         public IActionResult DelethallById(int id)
         {
@@ -67,7 +69,7 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("ModifyHall")]
         public IActionResult ModifyHall(Hall hall)
         {
@@ -86,7 +88,7 @@ namespace MozizzAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("NewHall")]
         public IActionResult NewHall(Hall hall)
         {

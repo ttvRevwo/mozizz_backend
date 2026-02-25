@@ -1,5 +1,6 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MozizzAPI.DTOS;
@@ -59,7 +60,7 @@ namespace MozizzAPI.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost("NewMovie")]
         public async Task<IActionResult> NewMovie([FromForm] Movie movie, IFormFile? imageFile)
         {
@@ -92,7 +93,7 @@ namespace MozizzAPI.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteMovie/{id}")]
         public async Task<IActionResult> DeleteMovie(int id)
         {
@@ -111,7 +112,7 @@ namespace MozizzAPI.Controllers
             return Ok("Törölve mindenhonnan.");
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("ModifyMovie")]
         public async Task<IActionResult> ModifyMovie([FromForm] MovieDto movieDto)
         {
