@@ -29,7 +29,7 @@ namespace MozizzAPI.Controllers
         [HttpGet("AdminTest")]
         public IActionResult AdminTest()
         {
-            return Ok("Szia Admin! Sikeresen beléptél a titkos végpontra!");
+            return Ok("Szia Admin! Sikeresen beléptél a titkos végpontra!"); 
         }
 
         [HttpPost("Login")]
