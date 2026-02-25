@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MozizzAPI.DTOS; 
+using Microsoft.IdentityModel.Tokens;
+using MozizzAPI.DTOS;
 using MozizzAPI.Models;
-using Org.BouncyCastle.Asn1.Ocsp;
-using Org.BouncyCastle.Crypto.Generators;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Mail;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -26,6 +25,12 @@ namespace MozizzAPI.Controllers
             _configuration = configuration;
         }
 
+        [Authorize(Roles = "Admin")]
+        [HttpGet("AdminTest")]
+        public IActionResult AdminTest()
+        {
+            return Ok("Szia Admin! Sikeresen beléptél a titkos végpontra!");
+        }
 
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginDto dto)
@@ -36,44 +41,40 @@ namespace MozizzAPI.Controllers
                     .Include(u => u.Role)
                     .FirstOrDefault(u => u.Email == dto.Email);
 
-                if (user == null) return BadRequest("Hibás email cím vagy jelszó!");
-
-                bool isValidPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
-
-                if (!isValidPassword)
+                if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
                 {
                     return BadRequest("Hibás email cím vagy jelszó!");
                 }
+
                 var jwtSettings = _configuration.GetSection("Jwt");
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
 
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, user.Role != null ? user.Role.RoleName : "Customer")
+                    new Claim(ClaimTypes.Role, user.Role?.RoleName ?? "Customer")
                 };
 
                 var token = new JwtSecurityToken(
                     issuer: jwtSettings["Issuer"],
                     audience: jwtSettings["Audience"],
                     claims: claims,
-                    expires: DateTime.Now.AddHours(2),
+                    expires: DateTime.UtcNow.AddHours(2),
                     signingCredentials: creds
                 );
 
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
                 return Ok(new
                 {
                     message = "Sikeres bejelentkezés!",
                     token = tokenString,
                     userId = user.UserId,
                     name = user.Name,
-                    email = user.Email,
-                    roleId = user.RoleId
+                    role = user.Role?.RoleName ?? "Customer"
                 });
             }
             catch (Exception ex)
@@ -82,26 +83,25 @@ namespace MozizzAPI.Controllers
             }
         }
 
-
         [HttpPost("RegisterRequest")]
         public IActionResult RegisterRequest([FromBody] RegisterDto dto)
         {
             try
             {
-                var expiredCodes = _context.UserVerifications.Where(v => v.ExpiresAt < DateTime.Now);
+                var expiredCodes = _context.UserVerifications.Where(v => v.ExpiresAt < DateTime.UtcNow);
                 _context.UserVerifications.RemoveRange(expiredCodes);
+
                 if (_context.Users.Any(u => u.Email == dto.Email))
                     return BadRequest("Ez az email már regisztrálva van!");
 
                 string code = new Random().Next(100000, 999999).ToString();
-                var expiry = DateTime.Now.AddMinutes(5);
+                var expiry = DateTime.UtcNow.AddMinutes(5);
 
                 var existing = _context.UserVerifications.FirstOrDefault(v => v.Email == dto.Email);
                 if (existing != null)
                 {
                     existing.Code = code;
                     existing.ExpiresAt = expiry;
-                    _context.UserVerifications.Update(existing);
                 }
                 else
                 {
@@ -124,16 +124,14 @@ namespace MozizzAPI.Controllers
         {
             var auth = _context.UserVerifications.FirstOrDefault(v => v.Email == email && v.Code == code);
 
-            if (auth == null || auth.ExpiresAt < DateTime.Now)
+            if (auth == null || auth.ExpiresAt < DateTime.UtcNow)
                 return BadRequest("Hibás vagy lejárt kód!");
-
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
             var finalUser = new User
             {
                 Name = dto.Name,
                 Email = dto.Email,
-                PasswordHash = hashedPassword,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
                 Phone = dto.Phone,
                 RoleId = 2
             };
@@ -144,6 +142,7 @@ namespace MozizzAPI.Controllers
 
             return Ok("Sikeres regisztráció!");
         }
+
         private void SendGmail(string targetEmail, string code)
         {
             var emailConfig = _configuration.GetSection("EmailSettings");
@@ -153,9 +152,6 @@ namespace MozizzAPI.Controllers
             var fromAddress = new MailAddress(senderEmail, "Mozizz Cinema");
             var toAddress = new MailAddress(targetEmail);
 
-            const string subject = "Regisztrációs kód - Mozizz";
-
-           
             string body = $@"
                 <div style='font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; border-radius: 10px; max-width: 500px;'>
                     <h3 style='color: #333;'>Üdvözlünk a Mozizz alkalmazásban!</h3>
@@ -164,29 +160,24 @@ namespace MozizzAPI.Controllers
                         <h2 style='color: blue; letter-spacing: 5px; margin: 0;'>{code}</h2>
                     </div>
                     <p style='color: #666; font-size: 14px; margin-top: 20px;'>A kód 5 percig érvényes.</p>
-                    <hr style='border: 0; border-top: 1px solid #eee;'>
-                    <p style='color: #999; font-size: 12px;'>Ha nem te indítottad a regisztrációt, kérjük hagyd figyelmen kívül ezt az üzenetet.</p>
                 </div>";
 
-            var smtp = new SmtpClient
+            using var smtp = new SmtpClient
             {
                 Host = "smtp.gmail.com",
                 Port = 587,
                 EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(senderEmail, appPassword)
             };
 
-            using (var message = new MailMessage(fromAddress, toAddress)
+            using var message = new MailMessage(fromAddress, toAddress)
             {
-                Subject = subject,
+                Subject = "Regisztrációs kód - Mozizz",
                 Body = body,
                 IsBodyHtml = true
-            })
-            {
-                smtp.Send(message);
-            }
+            };
+
+            smtp.Send(message);
         }
     }
 }

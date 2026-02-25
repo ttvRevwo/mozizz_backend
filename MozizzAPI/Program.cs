@@ -1,22 +1,21 @@
-using Microsoft.EntityFrameworkCore;
-using MozizzAPI.Models;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using Microsoft.OpenApi.Models;
+using MozizzAPI.Models;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace MozizzAPI
 {
     public class Program
     {
-
-
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
-           
+            // CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("ReactPolicy", policy =>
@@ -27,8 +26,10 @@ namespace MozizzAPI
                 });
             });
 
+            // JWT Konfiguráció
             var jwtSettings = builder.Configuration.GetSection("Jwt");
             var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -39,26 +40,30 @@ namespace MozizzAPI
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
+                    ValidIssuer = jwtSettings["Issuer"],
                     ValidateAudience = true,
+                    ValidAudience = jwtSettings["Audience"],
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings["Issuer"],
-                    ValidAudience = jwtSettings["Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    RoleClaimType = ClaimTypes.Role,
+                    ClockSkew = TimeSpan.Zero
                 };
             });
 
             builder.Services.AddAuthorization();
 
+           
             var connectionString = builder.Configuration.GetConnectionString("MozizzConnection");
             builder.Services.AddDbContext<MozizzContext>(options =>
                 options.UseMySQL(connectionString));
 
-           
             builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
             builder.Services.AddEndpointsApiExplorer();
+
+            // Swagger JWT támogatással
             builder.Services.AddSwaggerGen(options =>
             {
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -89,7 +94,6 @@ namespace MozizzAPI
 
             var app = builder.Build();
 
-           
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -97,8 +101,6 @@ namespace MozizzAPI
             }
 
             app.UseHttpsRedirection();
-
-            
             app.UseCors("ReactPolicy");
 
             app.UseAuthentication();
