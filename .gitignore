@@ -7,7 +7,6 @@
 # --- Saját beállítások ---
 
 appsettings.json
-appsettings.Development.json
 
 
 # User-specific files
