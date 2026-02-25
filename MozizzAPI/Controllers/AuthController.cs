@@ -1,9 +1,15 @@
-﻿using System.Net;
-using System.Net.Mail;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MozizzAPI.DTOS; 
 using MozizzAPI.Models;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Org.BouncyCastle.Crypto.Generators;
+using System.Net;
+using System.Net.Mail;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace MozizzAPI.Controllers
 {
@@ -26,8 +32,10 @@ namespace MozizzAPI.Controllers
         {
             try
             {
-                var user = _context.Users.FirstOrDefault(u => u.Email == dto.Email);
-            
+                var user = _context.Users
+                    .Include(u => u.Role)
+                    .FirstOrDefault(u => u.Email == dto.Email);
+
                 if (user == null) return BadRequest("Hibás email cím vagy jelszó!");
 
                 bool isValidPassword = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
@@ -36,10 +44,32 @@ namespace MozizzAPI.Controllers
                 {
                     return BadRequest("Hibás email cím vagy jelszó!");
                 }
+                var jwtSettings = _configuration.GetSection("Jwt");
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Role, user.Role != null ? user.Role.RoleName : "Customer")
+                };
+
+                var token = new JwtSecurityToken(
+                    issuer: jwtSettings["Issuer"],
+                    audience: jwtSettings["Audience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddHours(2),
+                    signingCredentials: creds
+                );
+
+                var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
                 return Ok(new
                 {
                     message = "Sikeres bejelentkezés!",
+                    token = tokenString,
                     userId = user.UserId,
                     name = user.Name,
                     email = user.Email,
