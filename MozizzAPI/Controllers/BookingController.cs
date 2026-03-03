@@ -220,6 +220,7 @@ namespace MozizzAPI.Controllers
                 string base64QrCode = Convert.ToBase64String(qrCodeImage);
 
                 
+                
                 var emailConfig = _configuration.GetSection("EmailSettings");
                 string senderEmail = emailConfig["Email"];
                 string appPassword = emailConfig["Password"];
