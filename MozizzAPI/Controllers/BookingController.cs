@@ -118,7 +118,11 @@ namespace MozizzAPI.Controllers
                     string seatsString = string.Join(", ", bookedSeats); 
                     string showDateStr = showtime.ShowDate.ToShortDateString() + " " + showtime.ShowTime1.ToString();
 
-                   
+                    if (user != null && showtime != null)
+                    {
+                        
+                        SendTicketEmail(user.Email, showtime.Movie.Title, showDateStr, seatsString, egyediJegyKod);
+                    }
 
                     return Ok(new { message = "Sikeres foglalás! Az e-mailt kiküldtük.", reservationId = reservation.ReservationId });
                 }
@@ -204,8 +208,70 @@ namespace MozizzAPI.Controllers
             }
         }
 
+        private void SendTicketEmail(string targetEmail, string movieTitle, string showTime, string seats, string ticketCode)
+        {
+            try
+            {
+                
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(ticketCode, QRCodeGenerator.ECCLevel.Q);
+                PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+                byte[] qrCodeImage = qrCode.GetGraphic(20);
+                string base64QrCode = Convert.ToBase64String(qrCodeImage);
 
-        
-        
+                
+                var emailConfig = _configuration.GetSection("EmailSettings");
+                string senderEmail = emailConfig["Email"];
+                string appPassword = emailConfig["Password"];
+
+                var fromAddress = new MailAddress(senderEmail, "Mozizz Cinema");
+                var toAddress = new MailAddress(targetEmail);
+
+                
+                string body = $@"
+            <div style='font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;'>
+                <div style='background-color: #E50914; color: white; padding: 10px; text-align: center; border-radius: 8px 8px 0 0;'>
+                    <h2>Sikeres mozijegy foglalás! 🍿</h2>
+                </div>
+                <div style='padding: 20px; background-color: #fafafa;'>
+                    <p>Kedves Vásárlónk,</p>
+                    <p>A fizetés sikeresen megtörtént. Íme a jegyed részletei:</p>
+                    <ul style='list-style-type: none; padding: 0;'>
+                        <li style='margin-bottom: 10px;'>🎬 <b>Film:</b> {movieTitle}</li>
+                        <li style='margin-bottom: 10px;'>🕒 <b>Időpont:</b> {showTime}</li>
+                        <li style='margin-bottom: 10px;'>🪑 <b>Szék(ek):</b> {seats}</li>
+                    </ul>
+                    <p style='text-align: center; margin-top: 30px;'><b>A belépéshez mutasd be ezt a QR kódot a mozi bejáratánál:</b></p>
+                    <div style='text-align: center; margin: 20px 0;'>
+                        <img src='data:image/png;base64,{base64QrCode}' alt='Jegy QR Kód' style='width: 250px; height: 250px; border: 2px solid #ccc; border-radius: 10px;' />
+                    </div>
+                    <p style='text-align: center; color: #666; font-size: 12px;'>Jegy azonosító: {ticketCode}</p>
+                </div>
+            </div>";
+
+                
+                using var smtp = new SmtpClient
+                {
+                    Host = "smtp.gmail.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    Credentials = new NetworkCredential(senderEmail, appPassword)
+                };
+
+                using var message = new MailMessage(fromAddress, toAddress)
+                {
+                    Subject = $"Mozijegyed: {movieTitle}",
+                    Body = body,
+                    IsBodyHtml = true
+                };
+
+                smtp.Send(message);
+            }
+            catch (Exception ex)
+            {
+              
+                Console.WriteLine("Hiba az email küldésekor: " + ex.Message);
+            }
+        }
     }
 }
