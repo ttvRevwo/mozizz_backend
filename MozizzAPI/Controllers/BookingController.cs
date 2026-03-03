@@ -121,5 +121,57 @@ namespace MozizzAPI.Controllers
 
             return Ok(res);
         }
+
+        [HttpGet("AvailableSeats/{showtimeId}")]
+        public IActionResult GetAvailableSeats(int showtimeId)
+        {
+            try
+            {
+                
+                var showtime = _context.Showtimes
+                    .Include(s => s.Hall)
+                    .FirstOrDefault(s => s.ShowtimeId == showtimeId);
+
+                if (showtime == null)
+                    return NotFound(new { hiba = "A megadott vetítés nem található." });
+
+               
+                var allSeatsInHall = _context.Seats
+                    .Where(s => s.HallId == showtime.HallId)
+                    .Select(s => new { s.SeatId, s.SeatNumber, s.IsVip })
+                    .ToList();
+
+                
+                var reservedSeatIds = _context.Reservedseats
+                    .Include(rs => rs.Reservation)
+                    .Where(rs => rs.Reservation.ShowtimeId == showtimeId && rs.Reservation.Status == "confirmed")
+                    .Select(rs => rs.SeatId)
+                    .ToList();
+
+                
+                var seatMap = allSeatsInHall.Select(seat => new
+                {
+                    SeatId = seat.SeatId,
+                    SeatNumber = seat.SeatNumber,
+                    IsVip = seat.IsVip,
+                    IsReserved = reservedSeatIds.Contains(seat.SeatId) 
+                }).ToList();
+
+          
+                return Ok(new
+                {
+                    ShowtimeId = showtimeId,
+                    HallName = showtime.Hall.Name,
+                    TotalCapacity = allSeatsInHall.Count,
+                    ReservedCount = reservedSeatIds.Count,
+                    FreeCount = allSeatsInHall.Count - reservedSeatIds.Count,
+                    Seats = seatMap
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { hiba = "Hiba a székek lekérdezésekor: " + ex.Message });
+            }
+        }
     }
 }
