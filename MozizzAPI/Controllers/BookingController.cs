@@ -3,6 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MozizzAPI.DTOS;
 using MozizzAPI.Models;
+using QRCoder;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using System.Net;
+using System.Net.Mail;
 
 namespace MozizzAPI.Controllers
 {
@@ -11,28 +16,31 @@ namespace MozizzAPI.Controllers
     public class BookingController : ControllerBase
     {
         private readonly MozizzContext _context;
+        private readonly IConfiguration _configuration;
 
-        public BookingController(MozizzContext context)
+        public BookingController(MozizzContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+
         }
 
-      
+
         [HttpGet("GetSeatsForShowtime")]
         public IActionResult GetSeatsForShowtime(int showtimeId)
         {
             try
             {
-               
+
                 var showtime = _context.Showtimes.Find(showtimeId);
                 if (showtime == null) return NotFound("A vetítés nem található.");
 
-               
+
                 var allSeats = _context.Seats
                     .Where(s => s.HallId == showtime.HallId)
                     .ToList();
 
-               
+
                 var reservedSeatIds = _context.Reservedseats
                     .Where(rs => rs.Reservation.ShowtimeId == showtimeId)
                     .Select(rs => rs.SeatId)
@@ -61,7 +69,7 @@ namespace MozizzAPI.Controllers
             {
                 try
                 {
-                    var alreadyReserved = _context.Reservedseats
+                    var alreadyReserved = _context.Reservedseats 
                         .Any(rs => rs.Reservation.ShowtimeId == dto.ShowtimeId && dto.SeatIds.Contains(rs.SeatId));
 
                     if (alreadyReserved)
@@ -80,7 +88,7 @@ namespace MozizzAPI.Controllers
 
                     foreach (var seatId in dto.SeatIds)
                     {
-                        var reservedSeat = new Reservedseat
+                        var reservedSeat = new Reservedseat 
                         {
                             ReservationId = reservation.ReservationId,
                             SeatId = seatId
@@ -89,9 +97,30 @@ namespace MozizzAPI.Controllers
                     }
 
                     _context.SaveChanges();
-                    transaction.Commit(); 
 
-                    return Ok(new { message = "Sikeres foglalás!", reservationId = reservation.ReservationId });
+                    
+                    string egyediJegyKod = Guid.NewGuid().ToString();
+                    var ujJegy = new Ticket
+                    {
+                        ReservationId = reservation.ReservationId,
+                        TicketCode = egyediJegyKod
+                    };
+                    _context.Tickets.Add(ujJegy);
+                    _context.SaveChanges(); 
+
+                    transaction.Commit();
+
+                    
+                    var user = _context.Users.Find(dto.UserId);
+                    var showtime = _context.Showtimes.Include(s => s.Movie).FirstOrDefault(s => s.ShowtimeId == dto.ShowtimeId);
+                    var bookedSeats = _context.Seats.Where(s => dto.SeatIds.Contains(s.SeatId)).Select(s => s.SeatNumber).ToList();
+
+                    string seatsString = string.Join(", ", bookedSeats); 
+                    string showDateStr = showtime.ShowDate.ToShortDateString() + " " + showtime.ShowTime1.ToString();
+
+                   
+
+                    return Ok(new { message = "Sikeres foglalás! Az e-mailt kiküldtük.", reservationId = reservation.ReservationId });
                 }
                 catch (Exception ex)
                 {
@@ -109,7 +138,8 @@ namespace MozizzAPI.Controllers
                     .ThenInclude(s => s.Movie)
                 .Include(r => r.Reservedseats)
                     .ThenInclude(rs => rs.Seat)
-                .Select(r => new {
+                .Select(r => new
+                {
                     r.ReservationId,
                     MovieTitle = r.Showtime.Movie.Title,
                     Date = r.Showtime.ShowDate,
@@ -127,7 +157,7 @@ namespace MozizzAPI.Controllers
         {
             try
             {
-                
+
                 var showtime = _context.Showtimes
                     .Include(s => s.Hall)
                     .FirstOrDefault(s => s.ShowtimeId == showtimeId);
@@ -135,29 +165,29 @@ namespace MozizzAPI.Controllers
                 if (showtime == null)
                     return NotFound(new { hiba = "A megadott vetítés nem található." });
 
-               
+
                 var allSeatsInHall = _context.Seats
                     .Where(s => s.HallId == showtime.HallId)
                     .Select(s => new { s.SeatId, s.SeatNumber, s.IsVip })
                     .ToList();
 
-                
+
                 var reservedSeatIds = _context.Reservedseats
                     .Include(rs => rs.Reservation)
                     .Where(rs => rs.Reservation.ShowtimeId == showtimeId && rs.Reservation.Status == "confirmed")
                     .Select(rs => rs.SeatId)
                     .ToList();
 
-                
+
                 var seatMap = allSeatsInHall.Select(seat => new
                 {
                     SeatId = seat.SeatId,
                     SeatNumber = seat.SeatNumber,
                     IsVip = seat.IsVip,
-                    IsReserved = reservedSeatIds.Contains(seat.SeatId) 
+                    IsReserved = reservedSeatIds.Contains(seat.SeatId)
                 }).ToList();
 
-          
+
                 return Ok(new
                 {
                     ShowtimeId = showtimeId,
@@ -173,5 +203,9 @@ namespace MozizzAPI.Controllers
                 return BadRequest(new { hiba = "Hiba a székek lekérdezésekor: " + ex.Message });
             }
         }
+
+
+        
+        
     }
 }
