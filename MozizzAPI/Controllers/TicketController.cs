@@ -22,8 +22,8 @@ namespace MozizzAPI.Controllers
         {
             try
             {
-                
-                var ticketInfo = _context.Tickets
+  
+                var ticket = _context.Tickets
                     .Include(t => t.Reservation)
                         .ThenInclude(r => r.Showtime)
                             .ThenInclude(s => s.Movie)
@@ -32,27 +32,39 @@ namespace MozizzAPI.Controllers
                             .ThenInclude(rs => rs.Seat)
                     .FirstOrDefault(t => t.TicketCode == ticketCode);
 
-                if (ticketInfo == null)
+               
+                if (ticket == null)
                 {
-                    return NotFound(new { uzenet = "Érvénytelen jegy! Ez a kód nem létezik a rendszerben." });
+                    return NotFound(new { uzenet = "Érvénytelen jegy! Ez a kód nem létezik." });
                 }
 
-               
-                var seatNumbers = string.Join(", ", ticketInfo.Reservation.Reservedseats.Select(rs => rs.Seat.SeatNumber));
+                
+                if (ticket.IsUsed == true)
+                {
+                    return BadRequest(new
+                    {
+                        uzenet = "Ezt a jegyet már FELHASZNÁLTÁK!",
+                        idopont = ticket.IssuedDate 
+                    });
+                }
 
-             
+           
+                ticket.IsUsed = true;
+                _context.SaveChanges(); 
+
+                var seatNumbers = string.Join(", ", ticket.Reservation.Reservedseats.Select(rs => rs.Seat.SeatNumber));
+
                 return Ok(new
                 {
                     uzenet = "Érvényes jegy! Jó szórakozást!",
-                    film = ticketInfo.Reservation.Showtime.Movie.Title,
-                    idopont = ticketInfo.Reservation.Showtime.ShowDate.ToShortDateString() + " " + ticketInfo.Reservation.Showtime.ShowTime1,
-                    szekek = seatNumbers,
-                    vasarloId = ticketInfo.Reservation.UserId
+                    film = ticket.Reservation.Showtime.Movie.Title,
+                    idopont = ticket.Reservation.Showtime.ShowDate.ToShortDateString() + " " + ticket.Reservation.Showtime.ShowTime1,
+                    szekek = seatNumbers
                 });
             }
             catch (Exception ex)
             {
-                return BadRequest(new { hiba = "Hiba történt az ellenőrzés során: " + ex.Message });
+                return BadRequest(new { hiba = "Hiba történt: " + ex.Message });
             }
         }
 
