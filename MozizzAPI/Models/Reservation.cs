@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MozizzAPI.Models;
 
@@ -15,6 +16,7 @@ public partial class Reservation
 
     public string? Status { get; set; }
 
+    [Column("is_reminder_sent")]
     public bool? IsReminderSent { get; set; } = false;
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

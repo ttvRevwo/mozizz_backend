@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting; // <-- EZ HIÁNYZOTT
 using MozizzAPI.Models;
 using System.Net.Mail;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MozizzAPI.Services
 {
-    public class PreShowNotifierService
+    public class PreShowNotifierService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IConfiguration _configuration;
@@ -16,7 +19,45 @@ namespace MozizzAPI.Services
             _configuration = configuration;
         }
 
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        {
+            
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<MozizzContext>();
+                    var now = DateTime.Now;
 
+                    var upcomingReservations = await context.Reservations
+                        .Include(r => r.User)
+                        .Include(r => r.Showtime)
+                            .ThenInclude(s => s.Movie)
+                        .Where(r => r.Status == "confirmed" && r.IsReminderSent != true && r.Showtime.ShowDate.Date == now.Date)
+                        .ToListAsync(stoppingToken);
+
+                    foreach (var reservation in upcomingReservations)
+                    {
+
+                        DateTime showtimeStart = reservation.Showtime.ShowDate.Date.Add(reservation.Showtime.ShowTime1);
+
+
+                        if (showtimeStart <= now.AddHours(2) && showtimeStart > now)
+                        {
+
+                            SendReminderEmail(reservation.User.Email, reservation.Showtime.Movie.Title, showtimeStart.ToString("HH:mm"));
+
+
+                            reservation.IsReminderSent = true;
+                        }
+                    }
+
+                    await context.SaveChangesAsync(stoppingToken);
+                }
+
+                await Task.Delay(TimeSpan.FromMinutes(15), stoppingToken);
+            }
+        }
 
 
         private void SendReminderEmail(string targetEmail, string movieTitle, string time)

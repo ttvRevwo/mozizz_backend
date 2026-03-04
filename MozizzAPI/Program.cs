@@ -65,6 +65,7 @@ namespace MozizzAPI
 
             // Regisztráljuk a háttérszolgáltatást
             builder.Services.AddHostedService<BookingCleanupService>();
+            builder.Services.AddHostedService<MozizzAPI.Services.PreShowNotifierService>();
 
             builder.Services.AddEndpointsApiExplorer();
 
