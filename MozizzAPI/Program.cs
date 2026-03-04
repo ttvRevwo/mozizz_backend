@@ -1,11 +1,12 @@
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MozizzAPI.Models;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Json.Serialization;
+using MozizzAPI.Services;
 
 namespace MozizzAPI
 {
@@ -60,6 +61,10 @@ namespace MozizzAPI
 
             builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+
+            // Regisztráljuk a háttérszolgáltatást
+            builder.Services.AddHostedService<BookingCleanupService>();
 
             builder.Services.AddEndpointsApiExplorer();
 
