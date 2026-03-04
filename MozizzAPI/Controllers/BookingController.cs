@@ -212,11 +212,6 @@ namespace MozizzAPI.Controllers
         {
             try
             {
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(ticketCode, QRCodeGenerator.ECCLevel.Q);
-                PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
-                byte[] qrCodeImage = qrCode.GetGraphic(20);
-
                 var emailConfig = _configuration.GetSection("EmailSettings");
                 string senderEmail = emailConfig["Email"];
                 string appPassword = emailConfig["Password"];
@@ -224,23 +219,25 @@ namespace MozizzAPI.Controllers
                 var fromAddress = new MailAddress(senderEmail, "Mozizz Cinema");
                 var toAddress = new MailAddress(targetEmail);
 
+                string qrCodeUrl = $"https://quickchart.io/qr?text={ticketCode}&size=250";
+
                 
                 string body = $@"
             <div style='font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto;'>
                 <div style='background-color: #E50914; color: white; padding: 10px; text-align: center; border-radius: 8px 8px 0 0;'>
-                    <h2>Sikeres mozijegy foglalás!</h2>
+                    <h2>Sikeres mozijegy foglalás! 🍿</h2>
                 </div>
                 <div style='padding: 20px; background-color: #fafafa;'>
                     <p>Kedves Vásárlónk,</p>
                     <p>A fizetés sikeresen megtörtént. Íme a jegyed részletei:</p>
                     <ul style='list-style-type: none; padding: 0;'>
-                        <li style='margin-bottom: 10px;'><b>Film:</b> {movieTitle}</li>
-                        <li style='margin-bottom: 10px;'><b>Időpont:</b> {showTime}</li>
-                        <li style='margin-bottom: 10px;'><b>Szék(ek):</b> {seats}</li>
+                        <li style='margin-bottom: 10px;'>🎬 <b>Film:</b> {movieTitle}</li>
+                        <li style='margin-bottom: 10px;'>🕒 <b>Időpont:</b> {showTime}</li>
+                        <li style='margin-bottom: 10px;'>🪑 <b>Szék(ek):</b> {seats}</li>
                     </ul>
                     <p style='text-align: center; margin-top: 30px;'><b>A belépéshez mutasd be ezt a QR kódot a mozi bejáratánál:</b></p>
                     <div style='text-align: center; margin: 20px 0;'>
-                        <img src='cid:qrcode' alt='Jegy QR Kód' style='width: 250px; height: 250px; border: 2px solid #ccc; border-radius: 10px;' />
+                        <img src='{qrCodeUrl}' alt='Jegy QR Kód' style='width: 250px; height: 250px; border: 2px solid #ccc; border-radius: 10px;' />
                     </div>
                     <p style='text-align: center; color: #666; font-size: 12px;'>Jegy azonosító: {ticketCode}</p>
                 </div>
@@ -257,22 +254,11 @@ namespace MozizzAPI.Controllers
                 using var message = new MailMessage(fromAddress, toAddress)
                 {
                     Subject = $"Mozijegyed: {movieTitle}",
-                    IsBodyHtml = true 
+                    Body = body,
+                    IsBodyHtml = true
                 };
 
-      
-                using (MemoryStream ms = new MemoryStream(qrCodeImage))
-                {
-                    AlternateView htmlView = AlternateView.CreateAlternateViewFromString(body, null, "text/html");
-                    LinkedResource qrImageResource = new LinkedResource(ms, "image/png")
-                    {
-                        ContentId = "qrcode" 
-                    };
-                    htmlView.LinkedResources.Add(qrImageResource);
-                    message.AlternateViews.Add(htmlView);
-
-                    smtp.Send(message);
-                }
+                smtp.Send(message);
             }
             catch (Exception ex)
             {
