@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MozizzAPI.Models;
+using Mysqlx.Crud;
 
 namespace MozizzAPI.Controllers
 {
