@@ -15,6 +15,8 @@ public partial class Reservation
 
     public string? Status { get; set; }
 
+    public bool? IsReminderSent { get; set; } = false;
+
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual ICollection<Reservedseat> Reservedseats { get; set; } = new List<Reservedseat>();
