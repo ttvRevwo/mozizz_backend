@@ -69,18 +69,18 @@ namespace MozizzAPI.Controllers
             {
                 try
                 {
-                    var alreadyReserved = _context.Reservedseats 
+                    var alreadyReserved = _context.Reservedseats
                         .Any(rs => rs.Reservation.ShowtimeId == dto.ShowtimeId && dto.SeatIds.Contains(rs.SeatId));
 
                     if (alreadyReserved)
-                        return BadRequest("Sajnáljuk, időközben valaki már lefoglalta az egyik választott széket.");
+                        return BadRequest(new { hiba = "Sajnáljuk, időközben valaki már lefoglalta az egyik választott széket." });
 
                     var reservation = new Reservation
                     {
                         UserId = dto.UserId,
                         ShowtimeId = dto.ShowtimeId,
                         ReservationDate = DateTime.Now,
-                        Status = "confirmed"
+                        Status = "pending" 
                     };
 
                     _context.Reservations.Add(reservation);
@@ -88,7 +88,7 @@ namespace MozizzAPI.Controllers
 
                     foreach (var seatId in dto.SeatIds)
                     {
-                        var reservedSeat = new Reservedseat 
+                        var reservedSeat = new Reservedseat
                         {
                             ReservationId = reservation.ReservationId,
                             SeatId = seatId
@@ -97,42 +97,24 @@ namespace MozizzAPI.Controllers
                     }
 
                     _context.SaveChanges();
-
-                    
-                    string egyediJegyKod = Guid.NewGuid().ToString();
-                    var ujJegy = new Ticket
-                    {
-                        ReservationId = reservation.ReservationId,
-                        TicketCode = egyediJegyKod
-                    };
-                    _context.Tickets.Add(ujJegy);
-                    _context.SaveChanges(); 
-
                     transaction.Commit();
 
-                    
-                    var user = _context.Users.Find(dto.UserId);
-                    var showtime = _context.Showtimes.Include(s => s.Movie).FirstOrDefault(s => s.ShowtimeId == dto.ShowtimeId);
-                    var bookedSeats = _context.Seats.Where(s => dto.SeatIds.Contains(s.SeatId)).Select(s => s.SeatNumber).ToList();
-
-                    string seatsString = string.Join(", ", bookedSeats); 
-                    string showDateStr = showtime.ShowDate.ToShortDateString() + " " + showtime.ShowTime1.ToString();
-
-                    if (user != null && showtime != null)
+                    return Ok(new
                     {
-                        
-                        SendTicketEmail(user.Email, showtime.Movie.Title, showDateStr, seatsString, egyediJegyKod);
-                    }
-
-                    return Ok(new { message = "Sikeres foglalás! Az e-mailt kiküldtük.", reservationId = reservation.ReservationId });
+                        message = "Székek ideiglenesen lefoglalva! 15 perced van befejezni a fizetést.",
+                        reservationId = reservation.ReservationId
+                    });
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return BadRequest($"Hiba a foglalás során: {ex.Message}");
+                    return BadRequest(new { hiba = $"Hiba a foglalás során: {ex.Message}" });
                 }
             }
         }
+
+
+
         [HttpGet("GetUserReservations/{userId}")]
         public IActionResult GetUserReservations(int userId)
         {
