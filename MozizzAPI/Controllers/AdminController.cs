@@ -64,6 +64,44 @@ namespace MozizzAPI.Controllers
             return Ok(topMovies);
         }
 
+        [HttpGet("ShowtimeOccupancy")]
+        public async Task<IActionResult> GetOccupancy()
+        {
+            var today = DateTime.Today;
+
+            var allShowtimes = await _context.Showtimes
+                .Include(s => s.Movie)
+                .Include(s => s.Reservations)
+                    .ThenInclude(r => r.Reservedseats)
+                .OrderByDescending(s => s.ShowDate) 
+                .ThenByDescending(s => s.ShowTime1)
+                .ToListAsync();
+
+            var report = new
+            {
+                AktivVetitesek = allShowtimes
+                    .Where(s => s.ShowDate >= today)
+                    .Select(s => new
+                    {
+                        Film = s.Movie.Title,
+                        Idopont = s.ShowDate.ToShortDateString() + " " + s.ShowTime1,
+                        EladottJegyek = s.Reservations.Sum(r => r.Reservedseats.Count),
+                        Telitettseg = Math.Round((double)s.Reservations.Sum(r => r.Reservedseats.Count) / 50 * 100, 2) + "%"
+                    }),
+
+                ArchivVetitesek = allShowtimes
+                    .Where(s => s.ShowDate < today)
+                    .Select(s => new
+                    {
+                        Film = s.Movie.Title,
+                        Idopont = s.ShowDate.ToShortDateString() + " " + s.ShowTime1,
+                        EladottJegyek = s.Reservations.Sum(r => r.Reservedseats.Count),
+                        Telitettseg = Math.Round((double)s.Reservations.Sum(r => r.Reservedseats.Count) / 50 * 100, 2) + "%"
+                    })
+            };
+
+            return Ok(report);
+        }
 
 
 
