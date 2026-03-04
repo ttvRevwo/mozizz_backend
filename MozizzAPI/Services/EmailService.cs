@@ -15,9 +15,8 @@ namespace MozizzAPI.Services
             _context = context;
         }
 
-        public async Task SendEmailAsync(int userId, string targetEmail, string emailType, string subject, string body)
+        public void SendEmail(int userId, string targetEmail, string emailType, string subject, string body)
         {
-
             var log = new Emaillog
             {
                 UserId = userId,
@@ -26,6 +25,7 @@ namespace MozizzAPI.Services
                 Body = body,
                 SentAt = DateTime.Now
             };
+
             try
             {
                 var emailConfig = _configuration.GetSection("EmailSettings");
@@ -41,9 +41,7 @@ namespace MozizzAPI.Services
 
                 using var message = new MailMessage(senderEmail, targetEmail, subject, body) { IsBodyHtml = true };
 
-              
-                await smtp.SendMailAsync(message);
-
+                smtp.Send(message);
                 log.Status = "Sent";
             }
             catch (Exception ex)
@@ -53,11 +51,9 @@ namespace MozizzAPI.Services
             }
             finally
             {
-                
                 _context.Emaillogs.Add(log);
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-
         }
 
 

@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using MozizzAPI.DTOS;
 using MozizzAPI.Models;
+using MozizzAPI.Services;
 using QRCoder;
-using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using System.Net;
 using System.Net.Mail;
@@ -17,11 +18,13 @@ namespace MozizzAPI.Controllers
     {
         private readonly MozizzContext _context;
         private readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
 
-        public BookingController(MozizzContext context, IConfiguration configuration)
+        public BookingController(MozizzContext context, IConfiguration configuration, EmailService emailService)
         {
             _context = context;
             _configuration = configuration;
+            _emailService = emailService;
 
         }
 
@@ -157,6 +160,7 @@ namespace MozizzAPI.Controllers
 
                     SendTicketEmail(reservation.User.Email, reservation.Showtime.Movie.Title, showDateStr, seatsString, egyediJegyKod);
 
+
                     return Ok(new { message = "Sikeres fizetés! A jegyet és a QR kódot elküldtük e-mailben." });
                 }
                 catch (Exception ex)
@@ -276,6 +280,7 @@ namespace MozizzAPI.Controllers
                     <p style='text-align: center; color: #666; font-size: 12px;'>Jegy azonosító: {ticketCode}</p>
                 </div>
             </div>";
+                
 
                 using var smtp = new SmtpClient
                 {
@@ -293,6 +298,7 @@ namespace MozizzAPI.Controllers
                 };
 
                 smtp.Send(message);
+
             }
             catch (Exception ex)
             {
