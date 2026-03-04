@@ -45,7 +45,7 @@ namespace MozizzAPI.Services
                         if (showtimeStart <= now.AddHours(2) && showtimeStart > now)
                         {
 
-                            SendReminderEmail(reservation.User.Email, reservation.Showtime.Movie.Title, showtimeStart.ToString("HH:mm"));
+                            SendReminderEmail(reservation.UserId, reservation.User.Email, reservation.Showtime.Movie.Title, showtimeStart.ToString("HH:mm"), context);
 
 
                             reservation.IsReminderSent = true;
@@ -60,8 +60,17 @@ namespace MozizzAPI.Services
         }
 
 
-        private void SendReminderEmail(string targetEmail, string movieTitle, string time)
+        
+        private void SendReminderEmail(int userId, string targetEmail, string movieTitle, string time, MozizzContext context)
         {
+            var log = new Emaillog
+            {
+                UserId = userId,
+                EmailType = "Reminder",
+                Subject = $"Hamarosan kezdődik: {movieTitle}",
+                SentAt = DateTime.Now
+            };
+
             try
             {
                 var emailConfig = _configuration.GetSection("EmailSettings");
@@ -69,13 +78,15 @@ namespace MozizzAPI.Services
                 string appPassword = emailConfig["Password"];
 
                 string body = $@"
-                    <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 500px;'>
-                        <h2 style='color: #E50914; text-align: center;'>Készítsd a popcornt! 🍿</h2>
-                        <p>Szia!</p>
-                        <p>Emlékeztetünk, hogy a <b>{movieTitle}</b> című filmed hamarosan (<b>{time}</b>-kor) kezdődik.</p>
-                        <p>Kérjük, érkezz meg időben, hogy át tudd venni az esetlegesen vásárolt rágcsálnivalókat.</p>
-                        <p>Jó szórakozást kíván a Mozizz csapata!</p>
-                    </div>";
+            <div style='font-family: Arial; padding: 20px; border: 1px solid #ddd; border-radius: 10px; max-width: 500px;'>
+                <h2 style='color: #E50914; text-align: center;'>Készítsd a popcornt! 🍿</h2>
+                <p>Szia!</p>
+                <p>Emlékeztetünk, hogy a <b>{movieTitle}</b> című filmed hamarosan (<b>{time}</b>-kor) kezdődik.</p>
+                <p>Kérjük, érkezz meg időben, hogy át tudd venni az esetlegesen vásárolt rágcsálnivalókat.</p>
+                <p>Jó szórakozást kíván a Mozizz csapata!</p>
+            </div>";
+
+                log.Body = body; 
 
                 using var smtp = new SmtpClient("smtp.gmail.com")
                 {
@@ -84,12 +95,22 @@ namespace MozizzAPI.Services
                     Credentials = new NetworkCredential(senderEmail, appPassword)
                 };
 
-                using var message = new MailMessage(senderEmail, targetEmail, $"Hamarosan kezdődik: {movieTitle}", body) { IsBodyHtml = true };
+                using var message = new MailMessage(senderEmail, targetEmail, log.Subject, body) { IsBodyHtml = true };
                 smtp.Send(message);
+
+               
+                log.Status = "Sent";
+                Console.WriteLine($"[LOG] E-mail sikeresen elküldve neki: {targetEmail}");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Hiba az emlékeztető e-mail küldésekor: " + ex.Message);
+              
+                log.Status = "Failed";
+                Console.WriteLine($"[LOG] Hiba az e-mail küldésekor: {ex.Message}");
+            }
+            finally
+            {
+                context.Emaillogs.Add(log);
             }
         }
     }
