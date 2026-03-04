@@ -113,7 +113,59 @@ namespace MozizzAPI.Controllers
             }
         }
 
+        [HttpPost("ConfirmBooking/{reservationId}")]
+        public IActionResult ConfirmBooking(int reservationId)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var reservation = _context.Reservations
+                        .Include(r => r.Reservedseats)
+                            .ThenInclude(rs => rs.Seat)
+                        .Include(r => r.User)
+                        .Include(r => r.Showtime)
+                            .ThenInclude(s => s.Movie)
+                        .FirstOrDefault(r => r.ReservationId == reservationId);
 
+                    if (reservation == null)
+                        return NotFound(new { hiba = "A foglalás nem található." });
+
+                    if (reservation.Status == "confirmed")
+                        return BadRequest(new { hiba = "Ezt a foglalást már korábban kifizették/véglegesítették." });
+
+                    if (reservation.ReservationDate.AddMinutes(15) < DateTime.Now)
+                    {
+                        return BadRequest(new { hiba = "A fizetési idő (15 perc) lejárt. Kérjük, kezdd újra a foglalást." });
+                    }
+
+                    reservation.Status = "confirmed";
+
+                    string egyediJegyKod = Guid.NewGuid().ToString();
+                    var ujJegy = new Ticket
+                    {
+                        ReservationId = reservation.ReservationId,
+                        TicketCode = egyediJegyKod
+                    };
+                    _context.Tickets.Add(ujJegy);
+
+                    _context.SaveChanges();
+                    transaction.Commit();
+
+                    string seatsString = string.Join(", ", reservation.Reservedseats.Select(rs => rs.Seat.SeatNumber));
+                    string showDateStr = reservation.Showtime.ShowDate.ToShortDateString() + " " + reservation.Showtime.ShowTime1.ToString();
+
+                    SendTicketEmail(reservation.User.Email, reservation.Showtime.Movie.Title, showDateStr, seatsString, egyediJegyKod);
+
+                    return Ok(new { message = "Sikeres fizetés! A jegyet és a QR kódot elküldtük e-mailben." });
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return BadRequest(new { hiba = $"Hiba a véglegesítés során: {ex.Message}" });
+                }
+            }
+        }
 
         [HttpGet("GetUserReservations/{userId}")]
         public IActionResult GetUserReservations(int userId)
