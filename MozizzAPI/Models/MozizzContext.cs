@@ -335,6 +335,9 @@ public partial class MozizzContext : DbContext
             entity.Property(e => e.TicketId)
                 .HasColumnType("int(11)")
                 .HasColumnName("ticket_id");
+            entity.Property(e => e.IsUsed)
+                .HasDefaultValueSql("'0'")
+                .HasColumnName("is_used");
             entity.Property(e => e.IssuedDate)
                 .HasDefaultValueSql("'current_timestamp()'")
                 .HasColumnType("timestamp")

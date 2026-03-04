@@ -17,11 +17,11 @@ public partial class Movie
 
     public string? Description { get; set; }
 
+    public string? Img { get; set; }
+
     public DateTime? ReleaseDate { get; set; }
 
     public DateTime CreatedAt { get; set; }
-
-    public string? Img { get; set; }
 
     public virtual ICollection<Showtime> Showtimes { get; set; } = new List<Showtime>();
 }

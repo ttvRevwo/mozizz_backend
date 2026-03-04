@@ -13,5 +13,7 @@ public partial class Ticket
 
     public DateTime IssuedDate { get; set; }
 
+    public bool? IsUsed { get; set; }
+
     public virtual Reservation Reservation { get; set; } = null!;
 }

@@ -56,7 +56,27 @@ namespace MozizzAPI.Controllers
             }
         }
 
-       
+        [Authorize]
+        [HttpGet("MyTickets/{userId}")]
+        public IActionResult GetMyTickets(int userId)
+
+        {
+            var myTickets = _context.Tickets
+                .Include(t => t.Reservation)
+                .Where(t => t.Reservation.UserId == userId)
+                .Select(t => new {
+                    t.TicketCode,
+                    t.IssuedDate,
+                    Status = t.Reservation.Status
+
+                })
+                .ToList();
+            return Ok(myTickets);
+
+        }
+
+
+
 
     }
 }
