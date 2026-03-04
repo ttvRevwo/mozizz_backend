@@ -26,5 +26,18 @@ namespace MozizzAPI.Controllers
             if (user == null) return NotFound("Felhasználó nem található.");
             return Ok(user);
         }
+
+        [HttpPut("Update/{userId}")]
+        public async Task<IActionResult> UpdateProfile(int userId, [FromBody] User updateData)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            user.Name = updateData.Name;
+            user.Phone = updateData.Phone;
+
+            await _context.SaveChangesAsync();
+            return Ok(new { uzenet = "Profil sikeresen frissítve!" });
+        }
     }
 }
