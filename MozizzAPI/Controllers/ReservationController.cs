@@ -1,13 +1,14 @@
-﻿using System.Configuration;
-using System.Net;
-using System.Net.Mail;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using MozizzAPI.Models;
+using MozizzAPI.Services;
 using Mysqlx.Crud;
+using System.Configuration;
+using System.Net;
+using System.Net.Mail;
 
 namespace MozizzAPI.Controllers
 {
@@ -17,11 +18,13 @@ namespace MozizzAPI.Controllers
     {
         private readonly MozizzContext _context;
         private readonly IConfiguration _configuration;
+        private readonly EmailService _emailService;
 
-        public ReservationController(MozizzContext context, IConfiguration configuration)
+        public ReservationController(MozizzContext context, IConfiguration configuration, EmailService emailService)
         {
             _context = context;
             _configuration = configuration;
+            _emailService = emailService;
         }
 
         [Authorize]
@@ -89,6 +92,13 @@ namespace MozizzAPI.Controllers
                 await _context.SaveChangesAsync();
 
                 SendCancellationEmail(userEmail, movieTitle, showTime);
+                _emailService.SendEmail(
+                    reservation.UserId,
+                    userEmail,
+                    "Cancellation",
+                    "Foglalás lemondás visszaigazolása",
+                    "body"
+                );
 
                 return Ok(new { uzenet = "Foglalás törölve és visszaigazoló e-mail elküldve!" });
             }

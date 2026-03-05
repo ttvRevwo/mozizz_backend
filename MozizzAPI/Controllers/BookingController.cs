@@ -159,6 +159,13 @@ namespace MozizzAPI.Controllers
                     string showDateStr = reservation.Showtime.ShowDate.ToShortDateString() + " " + reservation.Showtime.ShowTime1.ToString();
 
                     SendTicketEmail(reservation.User.Email, reservation.Showtime.Movie.Title, showDateStr, seatsString, egyediJegyKod);
+                    _emailService.SendEmail(
+                     reservation.UserId,
+                     reservation.User.Email,
+                     "Cancellation",
+                     "Foglalás lemondás visszaigazolása",
+                     "A foglalásod lemondás sikeresen rögzítve lett."
+                 );
 
 
                     return Ok(new { message = "Sikeres fizetés! A jegyet és a QR kódot elküldtük e-mailben." });
