@@ -1,0 +1,41 @@
+﻿<Window x:Class="MozizzAdminKliens.Windows.UsersWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Felhasználók" Height="460" Width="750"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+            <Label Content="Keresés (név / email):"/>
+            <TextBox x:Name="tbxSearch" Width="200" VerticalContentAlignment="Center"/>
+            <Button Content="Szűrés" Click="btnFilter_Click" Padding="8,3" Margin="8,0,0,0"/>
+            <Button Content="Frissítés" Click="btnRefresh_Click" Padding="8,3" Margin="4,0,0,0"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  x:Name="dgUsers"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding userId}" Width="50"/>
+                <DataGridTextColumn Header="Név" Binding="{Binding name}" Width="180"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding email}" Width="220"/>
+                <DataGridTextColumn Header="Telefon" Binding="{Binding phone}" Width="130"/>
+                <DataGridTextColumn Header="Szerepkör" Binding="{Binding role}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
+            <Button Content="Admin szerepkör" Click="btnSetAdmin_Click" Padding="8,5" Margin="0,0,8,0"/>
+            <Button Content="Customer szerepkör" Click="btnSetCustomer_Click" Padding="8,5" Margin="0,0,8,0"/>
+            <TextBlock x:Name="tbStatus" VerticalAlignment="Center" Foreground="Gray"/>
+        </StackPanel>
+    </Grid>
+</Window>
