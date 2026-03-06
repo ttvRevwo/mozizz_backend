@@ -15,6 +15,7 @@ namespace MozizzAdminKliens.Windows
             InitializeComponent();
         }
 
+        //Teszt
         private async void Window_Loaded(object sender, RoutedEventArgs e) => await LoadUsers();
 
         private async Task LoadUsers()
