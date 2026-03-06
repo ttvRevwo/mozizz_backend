@@ -1,1 +1,1 @@
-# Visual Studio.vs/*.user# Build outputsobj/bin/# Generated files*.g.cs*.g.i.cs*.cache*.db*.db-shm*.db-wal*.vsidx*.suo*.bin*.v9.bin*.suoDocumentLayout.jsonDocumentLayout.backup.json# Sensitive filesappsettings.jsonappsettings.*.json*.envsecrets.json
+.vs/bin/obj/*.user*.suo*.db*.db-shm*.db-wal*.vsidx*.v2*.v9.bin*.cache*.g.cs*.g.i.cs*.bamlappsettings.jsonappsettings.*.json
