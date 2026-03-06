@@ -14,6 +14,7 @@ namespace MozizzAdminKliens
         public static string token = null;
         public static string loggedInName = null;
 
+        //Teszt
         public MainWindow()
         {
             InitializeComponent();
