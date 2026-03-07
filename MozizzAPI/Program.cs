@@ -21,7 +21,7 @@ namespace MozizzAPI
             {
                 options.AddPolicy("ReactPolicy", policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173")
+                    policy.AllowAnyOrigin()
                           .AllowAnyMethod()
                           .AllowAnyHeader();
                 });
@@ -54,7 +54,7 @@ namespace MozizzAPI
 
             builder.Services.AddAuthorization();
 
-           
+
             var connectionString = builder.Configuration.GetConnectionString("MozizzConnection");
             builder.Services.AddDbContext<MozizzContext>(options =>
                 options.UseMySQL(connectionString));
@@ -101,10 +101,10 @@ namespace MozizzAPI
 
             var app = builder.Build();
 
-            
+
             app.UseSwagger();
             app.UseSwaggerUI();
-            
+
 
             app.UseHttpsRedirection();
             app.UseCors("ReactPolicy");
