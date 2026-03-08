@@ -97,7 +97,7 @@ namespace MozizzAPI.Controllers
                     userEmail,
                     "Cancellation",
                     "Foglalás lemondás visszaigazolása",
-                    "body"
+                    "A foglalásod lemondás sikeresen rögzítve lett" 
                 );
 
                 return Ok(new { uzenet = "Foglalás törölve és visszaigazoló e-mail elküldve!" });

@@ -162,9 +162,9 @@ namespace MozizzAPI.Controllers
                     _emailService.SendEmail(
                      reservation.UserId,
                      reservation.User.Email,
-                     "Cancellation",
-                     "Foglalás lemondás visszaigazolása",
-                     "A foglalásod lemondás sikeresen rögzítve lett."
+                     "Confirmed Booking",
+                     "Foglalás sikeres visszaigazolása",
+                     "A foglalásod sikeresen rögzítve lett."
                  );
 
 
