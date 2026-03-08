@@ -79,8 +79,8 @@ namespace MozizzAPI.Controllers
                 .Select(t => new {
                     t.TicketCode,
                     t.IssuedDate,
+                    t.IsUsed,
                     Status = t.Reservation.Status
-
                 })
                 .ToList();
             return Ok(myTickets);
