@@ -41,7 +41,7 @@ namespace MozizzAPI.Services
 
                 using var message = new MailMessage(senderEmail, targetEmail, subject, body) { IsBodyHtml = true };
 
-                smtp.Send(message);
+                
                 log.Status = "Sent";
             }
             catch (Exception ex)
