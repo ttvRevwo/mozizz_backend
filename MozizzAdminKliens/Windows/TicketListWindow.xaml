@@ -1,0 +1,34 @@
+﻿<Window x:Class="MozizzAdminKliens.Windows.TicketListWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Jegyek listája" Height="460" Width="750"
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+            <Label Content="UserID alapján:"/>
+            <TextBox x:Name="tbxUserId" Width="80" VerticalContentAlignment="Center"/>
+            <Button Content="Betöltés" Click="btnLoad_Click" Padding="8,3" Margin="8,0,0,0"/>
+            <Button Content="Kód másolása" Click="btnCopyCode_Click" Padding="8,3" Margin="4,0,0,0"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  x:Name="dgTickets"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Kód" Binding="{Binding ticketCode}" Width="220"/>
+                <DataGridTextColumn Header="Kiállítva" Binding="{Binding issuedDate}" Width="160"/>
+                <DataGridTextColumn Header="Státusz" Binding="{Binding status}" Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBlock Grid.Row="2" x:Name="tbStatus" Margin="0,6,0,0" Foreground="Gray"/>
+    </Grid>
+</Window>

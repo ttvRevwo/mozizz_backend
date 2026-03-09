@@ -3,8 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\windows\\userswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\userswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\windows\\userswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\userswindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\windows\\ticketvalidatewindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\ticketvalidatewindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\windows\\ticketvalidatewindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\ticketvalidatewindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\windows\\ticketlistwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\ticketlistwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\mozizz_backend\\mozizzadminkliens\\windows\\ticketlistwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\ticketlistwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,21 +42,104 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "UsersWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\UsersWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\UsersWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\UsersWindow.xaml.cs",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\UsersWindow.xaml.cs",
+              "ViewState": "AgIAAIgAAAAAAAAAAAAswJwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T10:32:05.555Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UsersWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\UsersWindow.xaml",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\UsersWindow.xaml",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\UsersWindow.xaml",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\UsersWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T10:32:20.254Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\MainWindow.xaml",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml",
+              "RelativeToolTip": "MozizzAdminKliens\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T10:24:24.924Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TicketValidateWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml.cs",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml.cs",
+              "ViewState": "AgIAACYAAAAAAAAAAAAiwEQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T10:23:57.688Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "TicketValidateWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\TicketValidateWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T10:23:50.452Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "TicketListWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketListWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\TicketListWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketListWindow.xaml.cs",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\TicketListWindow.xaml.cs",
+              "ViewState": "AgIAADIAAAAAAAAAAAAgwFAAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-09T10:23:31.514Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TicketListWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketListWindow.xaml",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\TicketListWindow.xaml",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\Windows\\TicketListWindow.xaml",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\TicketListWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-09T10:23:21.993Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml.cs",
               "RelativeToolTip": "MozizzAdminKliens\\MainWindow.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAABoAAAAAAAAAAAAYwEYAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-03-06T15:43:35.145Z",
               "EditorCaption": ""

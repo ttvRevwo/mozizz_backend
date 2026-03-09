@@ -1,1 +1,15 @@
-.vs/bin/obj/*.user*.suo*.db*.db-shm*.db-wal*.vsidx*.v2*.v9.bin*.cache*.g.cs*.g.i.cs*.bamlappsettings.jsonappsettings.*.json
+## Visual Studio
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.vsidx
+*.v2
+FileContentIndex/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/

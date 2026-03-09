@@ -32,6 +32,7 @@ namespace MozizzAdminKliens
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                     itemLogin.Header = $"Logout ({loggedInName})";
                     itemUsers.IsEnabled = true;
+                    itemTickets.IsEnabled = true;
                     tbWelcome.Text = $"Üdvözlünk, {loggedInName}! Válassz a menüből.";
                     tbWelcome.Foreground = System.Windows.Media.Brushes.Black;
                 }
@@ -43,6 +44,7 @@ namespace MozizzAdminKliens
                 client.DefaultRequestHeaders.Authorization = null;
                 itemLogin.Header = "Login";
                 itemUsers.IsEnabled = false;
+                itemTickets.IsEnabled = false;
                 tbWelcome.Text = "Kérjük, jelentkezz be az adminisztrációs felülethez.";
                 tbWelcome.Foreground = System.Windows.Media.Brushes.Gray;
                 MessageBox.Show("Kijelentkeztél!");
@@ -53,5 +55,16 @@ namespace MozizzAdminKliens
         {
             new UsersWindow(client).ShowDialog();
         }
+
+        private void itemTicketValidate_Click(object sender, RoutedEventArgs e)
+        {
+            new TicketValidateWindow(client).ShowDialog();
+        }
+
+        private void itemTicketList_Click(object sender, RoutedEventArgs e)
+        {
+            new TicketListWindow(client).ShowDialog();
+        }
+
     }
 }

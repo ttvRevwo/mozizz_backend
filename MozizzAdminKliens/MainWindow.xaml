@@ -16,7 +16,11 @@
             <MenuItem Header="Felhasználók" Name="itemUsers" IsEnabled="False">
                 <MenuItem Header="Felhasználók listája" Click="itemUserList_Click"/>
             </MenuItem>
-            
+            <MenuItem Header="Jegyek" Name="itemTickets" IsEnabled="False">
+                <MenuItem Header="Jegy validálás" Click="itemTicketValidate_Click"/>
+                <MenuItem Header="Jegyek listája" Click="itemTicketList_Click"/>
+            </MenuItem>
+
         </Menu>
         <TextBlock Name="tbWelcome"
                    VerticalAlignment="Center"

@@ -27,6 +27,13 @@ namespace MozizzAdminKliens.Windows
                 if (response.IsSuccessStatusCode)
                 {
                     string json = await response.Content.ReadAsStringAsync();
+
+                    // MySQL 0000-00-00 jellegű érvénytelen dátumok cseréje null-ra
+                    json = System.Text.RegularExpressions.Regex.Replace(
+                        json,
+                        @"""(0000-00-00[^""]*|00010101[^""]*)""",
+                        "null");
+
                     var data = JsonSerializer.Deserialize<JsonElement>(json);
                     _allUsers = data.EnumerateArray().Select(u => (dynamic)new
                     {
@@ -105,6 +112,13 @@ namespace MozizzAdminKliens.Windows
             }
 
             string getJson = await getResponse.Content.ReadAsStringAsync();
+
+            // MySQL érvénytelen dátumok kezelése
+            getJson = System.Text.RegularExpressions.Regex.Replace(
+                getJson,
+                @"""(0000-00-00[^""]*|00010101[^""]*)""",
+                "null");
+
             var userData = JsonSerializer.Deserialize<JsonElement>(getJson);
 
             // createdAt stringként kezelve, hogy elkerüljük a MySQL timestamp konverziós hibát
