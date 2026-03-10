@@ -6,7 +6,7 @@
     <Grid Margin="15">
         <StackPanel>
             <Label Content="Email cím"/>
-            <TextBox x:Name="tbxEmail" Text="admin@mozizz.hu"/>
+            <TextBox x:Name="tbxEmail" Text=""/>
             <Label Content="Jelszó" Margin="0,8,0,0"/>
             <PasswordBox x:Name="pwxPassword" Password=""/>
             <Button x:Name="btnLogin"

@@ -20,6 +20,10 @@
                 <MenuItem Header="Jegy validálás" Click="itemTicketValidate_Click"/>
                 <MenuItem Header="Jegyek listája" Click="itemTicketList_Click"/>
             </MenuItem>
+            <MenuItem Header="Filmek" Name="itemMovies" IsEnabled="False">
+                <MenuItem Header="Filmek listája" Click="itemMovieList_Click"/>
+                <MenuItem Header="Új film" Click="itemNewMovie_Click"/>
+            </MenuItem>
 
         </Menu>
         <TextBlock Name="tbWelcome"

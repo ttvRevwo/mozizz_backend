@@ -33,6 +33,7 @@ namespace MozizzAdminKliens
                     itemLogin.Header = $"Logout ({loggedInName})";
                     itemUsers.IsEnabled = true;
                     itemTickets.IsEnabled = true;
+                    itemMovies.IsEnabled = true;
                     tbWelcome.Text = $"Üdvözlünk, {loggedInName}! Válassz a menüből.";
                     tbWelcome.Foreground = System.Windows.Media.Brushes.Black;
                 }
@@ -45,6 +46,7 @@ namespace MozizzAdminKliens
                 itemLogin.Header = "Login";
                 itemUsers.IsEnabled = false;
                 itemTickets.IsEnabled = false;
+                itemMovies.IsEnabled = false;
                 tbWelcome.Text = "Kérjük, jelentkezz be az adminisztrációs felülethez.";
                 tbWelcome.Foreground = System.Windows.Media.Brushes.Gray;
                 MessageBox.Show("Kijelentkeztél!");
@@ -66,5 +68,14 @@ namespace MozizzAdminKliens
             new TicketListWindow(client).ShowDialog();
         }
 
+        private void itemMovieList_Click(object sender, RoutedEventArgs e)
+        {
+            new MoviesWindow(client).ShowDialog();
+        }
+
+        private void itemNewMovie_Click(object sender, RoutedEventArgs e)
+        {
+            new NewMovieWindow(client).ShowDialog();
+        }
     }
 }
