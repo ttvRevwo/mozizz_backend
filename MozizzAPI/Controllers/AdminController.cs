@@ -104,7 +104,48 @@ namespace MozizzAPI.Controllers
         }
 
 
+        [HttpGet("MonthlyRevenue")]
+        public async Task<IActionResult> GetMonthlyRevenue()
+        {
+            var data = await _context.Reservations
+                .Include(r => r.Reservedseats)
+                .Where(r => r.Status == "Confirmed")
+                .GroupBy(r => new { r.ReservationDate.Year, r.ReservationDate.Month })
+                .Select(g => new
+                {
+                    Ev = g.Key.Year,
+                    Honap = g.Key.Month,
+                    Bevetel = g.Sum(r => r.Reservedseats.Count) * 2500,
+                    EladottJegyek = g.Sum(r => r.Reservedseats.Count),
+                    FoglalasokSzama = g.Count()
+                })
+                .OrderByDescending(x => x.Ev)
+                .ThenByDescending(x => x.Honap)
+                .Take(12)
+                .ToListAsync();
 
+            return Ok(data);
+        }
+
+        [HttpGet("YearlyRevenue")]
+        public async Task<IActionResult> GetYearlyRevenue()
+        {
+            var data = await _context.Reservations
+                .Include(r => r.Reservedseats)
+                .Where(r => r.Status == "Confirmed")
+                .GroupBy(r => r.ReservationDate.Year)
+                .Select(g => new
+                {
+                    Ev = g.Key,
+                    Bevetel = g.Sum(r => r.Reservedseats.Count) * 2500,
+                    EladottJegyek = g.Sum(r => r.Reservedseats.Count),
+                    FoglalasokSzama = g.Count()
+                })
+                .OrderByDescending(x => x.Ev)
+                .ToListAsync();
+
+            return Ok(data);
+        }
 
 
 
