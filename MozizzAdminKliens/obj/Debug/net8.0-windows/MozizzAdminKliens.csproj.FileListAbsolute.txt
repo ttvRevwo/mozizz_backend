@@ -81,3 +81,9 @@ C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\NewMovieWindow.baml
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\MoviesWindow.g.cs
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\NewMovieWindow.g.cs
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\NewShowtimeWindow.baml
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ShowtimesWindow.baml
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\NewShowtimeWindow.g.cs
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ShowtimesWindow.g.cs
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ReservationsWindow.baml
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ReservationsWindow.g.cs

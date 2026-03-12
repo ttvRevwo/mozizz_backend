@@ -24,7 +24,13 @@
                 <MenuItem Header="Filmek listája" Click="itemMovieList_Click"/>
                 <MenuItem Header="Új film" Click="itemNewMovie_Click"/>
             </MenuItem>
-
+            <MenuItem Header="Vetítések" Name="itemShowtimes" IsEnabled="False">
+                <MenuItem Header="Vetítések listája" Click="itemShowtimeList_Click"/>
+                <MenuItem Header="Új vetítés" Click="itemNewShowtime_Click"/>
+            </MenuItem>
+            <MenuItem Header="Foglalások" Name="itemReservations" IsEnabled="False">
+                <MenuItem Header="Foglalások listája" Click="itemReservationList_Click"/>
+            </MenuItem>
         </Menu>
         <TextBlock Name="tbWelcome"
                    VerticalAlignment="Center"

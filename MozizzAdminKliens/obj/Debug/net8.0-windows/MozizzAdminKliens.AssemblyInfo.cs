@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MozizzAdminKliens")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+930f8fe5b653619fe9970f8972236a4134ebb13d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+792127238d67d7cf79dc81449e671c3851c3b3fa")]
 [assembly: System.Reflection.AssemblyProductAttribute("MozizzAdminKliens")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MozizzAdminKliens")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
