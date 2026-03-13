@@ -1,8 +1,10 @@
 ﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MozizzAPI.DTOS;
 using MozizzAPI.Models;
 
 namespace MozizzAPI.Controllers
@@ -48,6 +50,37 @@ namespace MozizzAPI.Controllers
             return Ok(items);
         }
 
+        [HttpPost("NewItem")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> NewItem([FromForm] BuffetItemDto dto, IFormFile? imageFile)
+        {
+            var item = new BuffetItem
+            {
+                Name = dto.Name!,
+                Description = dto.Description,
+                Price = dto.Price,
+                Category = dto.Category ?? "snack",
+                IsAvailable = dto.IsAvailable ?? true
+            };
+
+            if (imageFile != null)
+            {
+                using var stream = imageFile.OpenReadStream();
+                var safeName = dto.Name?.Replace(" ", "_").ToLower() ?? "item";
+                var uploadResult = await _cloudinary.UploadAsync(new ImageUploadParams
+                {
+                    File = new FileDescription(imageFile.FileName, stream),
+                    Folder = "buffet",
+                    PublicId = $"{safeName}_{DateTime.Now.Ticks}",
+                    Overwrite = true
+                });
+                item.Img = uploadResult.PublicId + "." + uploadResult.Format;
+            }
+
+            _context.BuffetItems.Add(item);
+            await _context.SaveChangesAsync();
+            return Ok(new { item.ItemId, uzenet = "Termék hozzáadva!" });
+        }
 
     }
 }
