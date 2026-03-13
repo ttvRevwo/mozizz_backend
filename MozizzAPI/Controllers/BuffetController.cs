@@ -1,4 +1,5 @@
 ﻿using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,17 @@ namespace MozizzAPI.Controllers
                 .Where(i => i.IsAvailable)
                 .OrderBy(i => i.Category).ThenBy(i => i.Name)
                 .Select(i => new { i.ItemId, i.Name, i.Description, i.Price, i.Category, i.Img })
+                .ToListAsync();
+            return Ok(items);
+        }
+
+        [HttpGet("AllItems")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllItems()
+        {
+            var items = await _context.BuffetItems
+                .OrderBy(i => i.Category).ThenBy(i => i.Name)
+                .Select(i => new { i.ItemId, i.Name, i.Description, i.Price, i.Category, i.Img, i.IsAvailable })
                 .ToListAsync();
             return Ok(items);
         }
