@@ -39,6 +39,8 @@ public partial class MozizzContext : DbContext
 
     public virtual DbSet<Userrole> Userroles { get; set; }
 
+    public virtual DbSet<BuffetItem> BuffetItems { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
 
@@ -436,6 +438,21 @@ public partial class MozizzContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("role_name");
         });
+
+        modelBuilder.Entity<BuffetItem>(entity =>
+        {
+            entity.HasKey(e => e.ItemId).HasName("PRIMARY");
+            entity.ToTable("buffet_items");
+            entity.Property(e => e.ItemId).HasColumnType("int(11)").HasColumnName("item_id");
+            entity.Property(e => e.Name).HasMaxLength(100).HasColumnName("name");
+            entity.Property(e => e.Description).HasMaxLength(255).HasColumnName("description");
+            entity.Property(e => e.Price).HasColumnType("int(11)").HasColumnName("price");
+            entity.Property(e => e.Category).HasMaxLength(50).HasColumnName("category").HasDefaultValue("snack");
+            entity.Property(e => e.Img).HasMaxLength(255).HasColumnName("img");
+            entity.Property(e => e.IsAvailable).HasColumnName("is_available").HasDefaultValue(true);
+        });
+
+
 
         OnModelCreatingPartial(modelBuilder);
     }
