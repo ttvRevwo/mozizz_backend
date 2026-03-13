@@ -82,5 +82,37 @@ namespace MozizzAPI.Controllers
             return Ok(new { item.ItemId, uzenet = "Termék hozzáadva!" });
         }
 
+
+
+        [HttpPut("ModifyItem/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ModifyItem(int id, [FromForm] BuffetItemDto dto, IFormFile? imageFile)
+        {
+            var item = await _context.BuffetItems.FindAsync(id);
+            if (item == null) return NotFound();
+
+            item.Name = dto.Name ?? item.Name;
+            item.Description = dto.Description ?? item.Description;
+            item.Price = dto.Price > 0 ? dto.Price : item.Price;
+            item.Category = dto.Category ?? item.Category;
+            item.IsAvailable = dto.IsAvailable ?? item.IsAvailable;
+
+            if (imageFile != null)
+            {
+                using var stream = imageFile.OpenReadStream();
+                var safeName = item.Name.Replace(" ", "_").ToLower();
+                var uploadResult = await _cloudinary.UploadAsync(new ImageUploadParams
+                {
+                    File = new FileDescription(imageFile.FileName, stream),
+                    Folder = "buffet",
+                    PublicId = $"{safeName}_{id}",
+                    Overwrite = true
+                });
+                item.Img = uploadResult.PublicId + "." + uploadResult.Format;
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(new { uzenet = "Módosítva!" });
+        }
     }
 }
