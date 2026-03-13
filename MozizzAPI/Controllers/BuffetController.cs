@@ -114,5 +114,16 @@ namespace MozizzAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { uzenet = "Módosítva!" });
         }
+
+        [HttpDelete("DeleteItem/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteItem(int id)
+        {
+            var item = await _context.BuffetItems.FindAsync(id);
+            if (item == null) return NotFound();
+            _context.BuffetItems.Remove(item);
+            await _context.SaveChangesAsync();
+            return Ok(new { uzenet = "Törölve!" });
+        }
     }
 }
