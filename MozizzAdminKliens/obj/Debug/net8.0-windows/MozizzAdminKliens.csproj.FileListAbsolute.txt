@@ -87,3 +87,5 @@ C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ShowtimesWindow.g.cs
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ReservationsWindow.baml
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\ReservationsWindow.g.cs
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\AdminreportWindow.baml
+C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\obj\Debug\net8.0-windows\Windows\AdminreportWindow.g.cs

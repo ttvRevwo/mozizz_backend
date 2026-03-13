@@ -3,6 +3,22 @@
   "WorkspaceRootPath": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\windows\\adminreportwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\adminreportwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\windows\\adminreportwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\adminreportwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\windows\\reservationswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\reservationswindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -13,14 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\windows\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\windows\\loginwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|solutionrelative:mozizzadminkliens\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{898483F0-157A-4CD7-941C-16B045E2F65B}|MozizzAdminKliens\\MozizzAdminKliens.csproj|c:\\users\\user\\documents\\github\\valami\\mozizz_backend\\mozizzadminkliens\\windows\\newshowtimewindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
@@ -51,6 +59,31 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "AdminreportWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\AdminreportWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\AdminreportWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\AdminreportWindow.xaml.cs",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\AdminreportWindow.xaml.cs",
+              "ViewState": "AgIAAIEAAAAAAAAAAAAcwI0AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T08:33:33.768Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AdminreportWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\AdminreportWindow.xaml",
+              "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\AdminreportWindow.xaml",
+              "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\AdminreportWindow.xaml",
+              "RelativeToolTip": "MozizzAdminKliens\\Windows\\AdminreportWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-12T08:33:27.406Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "ReservationsWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\ReservationsWindow.xaml.cs",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\ReservationsWindow.xaml.cs",
@@ -58,24 +91,22 @@
               "RelativeToolTip": "MozizzAdminKliens\\Windows\\ReservationsWindow.xaml.cs",
               "ViewState": "AgIAAFUAAAAAAAAAAAAcwGIAAABWAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T10:07:09.935Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T10:07:09.935Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
               "Title": "ReservationsWindow.xaml",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\ReservationsWindow.xaml",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\ReservationsWindow.xaml",
               "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\ReservationsWindow.xaml",
               "RelativeToolTip": "MozizzAdminKliens\\Windows\\ReservationsWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-11T10:07:00.07Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-11T10:07:00.07Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "NewShowtimeWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\NewShowtimeWindow.xaml.cs",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\NewShowtimeWindow.xaml.cs",
@@ -87,7 +118,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "NewShowtimeWindow.xaml",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\NewShowtimeWindow.xaml",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\NewShowtimeWindow.xaml",
@@ -98,7 +129,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "ShowtimesWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\ShowtimesWindow.xaml.cs",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\ShowtimesWindow.xaml.cs",
@@ -110,7 +141,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "ShowtimesWindow.xaml",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\ShowtimesWindow.xaml",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\ShowtimesWindow.xaml",
@@ -121,40 +152,37 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 6,
               "Title": "Loginwindow.xaml",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\Loginwindow.xaml",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\Windows\\Loginwindow.xaml",
               "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\Windows\\Loginwindow.xaml",
               "RelativeToolTip": "MozizzAdminKliens\\Windows\\Loginwindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-10T06:55:02.834Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-10T06:55:02.834Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "MainWindow.xaml",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\MainWindow.xaml",
               "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml",
               "RelativeToolTip": "MozizzAdminKliens\\MainWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-09T10:24:24.924Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-09T10:24:24.924Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MozizzAdminKliens\\MainWindow.xaml.cs",
               "ToolTip": "C:\\Users\\User\\Documents\\GitHub\\valami\\mozizz_backend\\MozizzAdminKliens\\MainWindow.xaml.cs",
               "RelativeToolTip": "MozizzAdminKliens\\MainWindow.xaml.cs",
-              "ViewState": "AgIAABkAAAAAAAAAAAAowCUAAAA2AAAAAAAAAA==",
+              "ViewState": "AgIAADcAAAAAAAAAAAAowGkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-06T15:43:35.145Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-06T15:43:35.145Z"
             }
           ]
         }

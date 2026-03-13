@@ -31,6 +31,10 @@
             <MenuItem Header="Foglalások" Name="itemReservations" IsEnabled="False">
                 <MenuItem Header="Foglalások listája" Click="itemReservationList_Click"/>
             </MenuItem>
+            <MenuItem Header="Riportok" Name="itemReports" IsEnabled="False">
+                <MenuItem Header="Admin riportok" Click="itemReports_Click"/>
+            </MenuItem>
+
         </Menu>
         <TextBlock Name="tbWelcome"
                    VerticalAlignment="Center"

@@ -10,11 +10,11 @@ none
 false
 TRACE;DEBUG;NET;NET8_0;NETCOREAPP;WINDOWS;WINDOWS7_0;NET5_0_OR_GREATER;NET6_0_OR_GREATER;NET7_0_OR_GREATER;NET8_0_OR_GREATER;NETCOREAPP3_0_OR_GREATER;NETCOREAPP3_1_OR_GREATER;WINDOWS7_0_OR_GREATER
 C:\Users\User\Documents\GitHub\valami\mozizz_backend\MozizzAdminKliens\App.xaml
-10-384378171
+11-879029116
 
-151533005066
+16-609539051
 198338916705
-MainWindow.xaml;Windows\Loginwindow.xaml;Windows\MoviesWindow.xaml;Windows\NewMovieWindow.xaml;Windows\NewShowtimeWindow.xaml;Windows\ReservationsWindow.xaml;Windows\ShowtimesWindow.xaml;Windows\TicketListWindow.xaml;Windows\TicketValidateWindow.xaml;Windows\UsersWindow.xaml;
+MainWindow.xaml;Windows\AdminreportWindow.xaml;Windows\Loginwindow.xaml;Windows\MoviesWindow.xaml;Windows\NewMovieWindow.xaml;Windows\NewShowtimeWindow.xaml;Windows\ReservationsWindow.xaml;Windows\ShowtimesWindow.xaml;Windows\TicketListWindow.xaml;Windows\TicketValidateWindow.xaml;Windows\UsersWindow.xaml;
 
 False
 

@@ -36,6 +36,7 @@ namespace MozizzAdminKliens
                     itemMovies.IsEnabled = true;
                     itemShowtimes.IsEnabled = true;
                     itemReservations.IsEnabled = true;
+                    itemReports.IsEnabled = true;
                     tbWelcome.Text = $"Üdvözlünk, {loggedInName}! Válassz a menüből.";
                     tbWelcome.Foreground = System.Windows.Media.Brushes.Black;
                 }
@@ -51,6 +52,7 @@ namespace MozizzAdminKliens
                 itemMovies.IsEnabled = false;
                 itemShowtimes.IsEnabled = false;
                 itemReservations.IsEnabled = false;
+                itemReports.IsEnabled = false;
                 tbWelcome.Text = "Kérjük, jelentkezz be az adminisztrációs felülethez.";
                 tbWelcome.Foreground = System.Windows.Media.Brushes.Gray;
                 MessageBox.Show("Kijelentkeztél!");
@@ -95,6 +97,11 @@ namespace MozizzAdminKliens
         private void itemReservationList_Click(object sender, RoutedEventArgs e)
         {
             new ReservationsWindow(client).ShowDialog();
+        }
+
+        private void itemReports_Click(object sender, RoutedEventArgs e)
+        {
+            new AdminReportWindow(client).ShowDialog();
         }
 
     }
