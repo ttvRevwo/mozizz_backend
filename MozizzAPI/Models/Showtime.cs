@@ -17,9 +17,9 @@ public partial class Showtime
 
     public DateTime CreatedAt { get; set; }
 
-    public virtual Hall Hall { get; set; } = null!;
+    public virtual Hall? Hall { get; set; }
 
-    public virtual Movie Movie { get; set; } = null!;
+    public virtual Movie? Movie { get; set; }
 
     public virtual ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
 }

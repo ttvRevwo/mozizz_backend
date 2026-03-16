@@ -34,7 +34,7 @@ namespace MozizzAPI.Controllers
             var items = await _context.BuffetItems
                 .Where(i => i.IsAvailable)
                 .OrderBy(i => i.Category).ThenBy(i => i.Name)
-                .Select(i => new { i.ItemId, i.Name, i.Description, i.Price, i.Category, i.Img })
+                .Select(i => new { itemId = i.ItemId, name = i.Name, description = i.Description, price = i.Price, category = i.Category, img = i.Img })
                 .ToListAsync();
             return Ok(items);
         }
@@ -45,7 +45,7 @@ namespace MozizzAPI.Controllers
         {
             var items = await _context.BuffetItems
                 .OrderBy(i => i.Category).ThenBy(i => i.Name)
-                .Select(i => new { i.ItemId, i.Name, i.Description, i.Price, i.Category, i.Img, i.IsAvailable })
+                .Select(i => new { itemId = i.ItemId, name = i.Name, description = i.Description, price = i.Price, category = i.Category, img = i.Img, isAvailable = i.IsAvailable })
                 .ToListAsync();
             return Ok(items);
         }
@@ -81,8 +81,6 @@ namespace MozizzAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok(new { item.ItemId, uzenet = "Termék hozzáadva!" });
         }
-
-
 
         [HttpPut("ModifyItem/{id}")]
         [Authorize(Roles = "Admin")]
