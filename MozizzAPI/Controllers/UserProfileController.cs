@@ -21,12 +21,12 @@ namespace MozizzAPI.Controllers
             _configuration = configuration;
         }
 
-
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetProfile(int userId)
         {
             var user = await _context.Users
-                .Select(u => new { u.UserId, u.Name, u.Email, u.Phone, u.CreatedAt }).FirstOrDefaultAsync(u => u.UserId == userId);
+                .Select(u => new { u.UserId, u.Name, u.Email, u.Phone, u.CreatedAt })
+                .FirstOrDefaultAsync(u => u.UserId == userId);
 
             if (user == null) return NotFound("Felhasználó nem található.");
             return Ok(user);
@@ -52,9 +52,7 @@ namespace MozizzAPI.Controllers
             if (user == null) return NotFound();
 
             if (!BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash))
-            {
                 return BadRequest("A jelenlegi jelszó nem megfelelő!");
-            }
 
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
             await _context.SaveChangesAsync();
@@ -85,13 +83,47 @@ namespace MozizzAPI.Controllers
                 }
                 else
                 {
-                    _context.UserVerifications.Add(new UserVerification { Email = dto.Email, Code = code, ExpiresAt = expiry });
+                    _context.UserVerifications.Add(new UserVerification
+                    {
+                        Email = dto.Email,
+                        Code = code,
+                        ExpiresAt = expiry
+                    });
                 }
 
                 _context.SaveChanges();
-                SendPasswordResetEmail(dto.Email, code, user.Name);
 
-                return Ok("Jelszóvisszaállító kód elküldve!");
+                try { SendPasswordResetEmail(dto.Email, code, user.Name); }
+                catch {}
+
+                return Ok(new { uzenet = "Jelszóvisszaállító kód elküldve!" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba: {ex.Message}");
+            }
+        }
+
+        [HttpPost("ResetPassword")]
+        public IActionResult ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            try
+            {
+                var auth = _context.UserVerifications
+                    .FirstOrDefault(v => v.Email == dto.Email && v.Code == dto.Code);
+
+                if (auth == null || auth.ExpiresAt < DateTime.UtcNow)
+                    return BadRequest("Hibás vagy lejárt kód!");
+
+                var user = _context.Users.FirstOrDefault(u => u.Email == dto.Email);
+                if (user == null)
+                    return BadRequest("Felhasználó nem található!");
+
+                user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+                _context.UserVerifications.Remove(auth);
+                _context.SaveChanges();
+
+                return Ok(new { uzenet = "Jelszó sikeresen megváltoztatva!" });
             }
             catch (Exception ex)
             {
@@ -138,5 +170,4 @@ namespace MozizzAPI.Controllers
             smtp.Send(message);
         }
     }
-
 }
