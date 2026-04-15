@@ -45,5 +45,34 @@ namespace TestProject1
 
             _controller = new AuthController(_context, config);
         }
+
+        [TestMethod]
+        public void Login_RosszEmail_BadRequestetAd()
+        {
+            var loginDto = new LoginDto { Email = "rossz@email.hu", Password = "titkosJelszo123" };
+
+            var result = _controller.Login(loginDto);
+
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod]
+        public void Login_RosszJelszo_BadRequestetAd()
+        {
+            var loginDto = new LoginDto { Email = "teszt@teszt.hu", Password = "rossz_jelszo_111" };
+
+            var result = _controller.Login(loginDto);
+
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod]
+        public void Login_HelyesAdatok_OkEredmenytEsTokentAd()
+        {
+            var loginDto = new LoginDto { Email = "teszt@teszt.hu", Password = "titkosJelszo123" };
+            var result = _controller.Login(loginDto);
+
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
     }
 }
