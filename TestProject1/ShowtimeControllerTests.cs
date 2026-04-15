@@ -113,5 +113,65 @@ namespace TestProject1
             var notFound = (NotFoundObjectResult)result;
             Assert.AreEqual("A vetítés nem található.", notFound.Value);
         }
+
+        [TestMethod]
+        public void CreateShowtime_ErvenyesAdat_ReturnsCreated()
+        {
+            var ujShowtime = new Showtime
+            {
+                ShowtimeId = 3,
+                MovieId = 1,
+                HallId = 1,
+                ShowDate = DateTime.Today.AddDays(5),
+                ShowTime1 = new TimeSpan(16, 0, 0),
+                CreatedAt = DateTime.Now
+            };
+
+            var result = _controller.Create(ujShowtime);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
+            Assert.AreEqual(3, _context.Showtimes.Count());
+        }
+
+        [TestMethod]
+        public void CreateShowtime_NemLetezoMovieId_ReturnsBadRequest()
+        {
+            var ujShowtime = new Showtime
+            {
+                ShowtimeId = 4,
+                MovieId = 999,
+                HallId = 1,
+                ShowDate = DateTime.Today.AddDays(3),
+                ShowTime1 = new TimeSpan(14, 0, 0),
+                CreatedAt = DateTime.Now
+            };
+
+            var result = _controller.Create(ujShowtime);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            var badRequest = (BadRequestObjectResult)result;
+            Assert.AreEqual("Érvénytelen MovieId vagy HallId!", badRequest.Value);
+        }
+
+        [TestMethod]
+        public void CreateShowtime_NemLetezoHallId_ReturnsBadRequest()
+        {
+            var ujShowtime = new Showtime
+            {
+                ShowtimeId = 5,
+                MovieId = 1,
+                HallId = 999,
+                ShowDate = DateTime.Today.AddDays(3),
+                ShowTime1 = new TimeSpan(15, 0, 0),
+                CreatedAt = DateTime.Now
+            };
+
+            var result = _controller.Create(ujShowtime);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
     }
 }
