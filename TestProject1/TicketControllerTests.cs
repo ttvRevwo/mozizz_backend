@@ -139,5 +139,25 @@ namespace TestProject1
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         }
+
+        [TestMethod]
+        public void GetMyTickets_LetezoUserId_ReturnsOkWithTickets()
+        {
+            var result = _controller.GetMyTickets(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+            Assert.IsNotNull(okResult.Value);
+        }
+
+        [TestMethod]
+        public void GetMyTickets_NemLetezoUserId_ReturnsUresLista()
+        {
+            var result = _controller.GetMyTickets(999);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
     }
 }
