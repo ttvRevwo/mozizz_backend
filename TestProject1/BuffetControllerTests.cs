@@ -41,5 +41,36 @@ namespace TestProject1
 
             _controller = new BuffetController(_context, config);
         }
+        [TestMethod]
+        public async Task GetItems_CsakAzElerhetoketAdjaVissza()
+        {
+            var result = await _controller.GetItems();
+
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+
+            var items = okResult.Value as IEnumerable<object>;
+            Assert.IsNotNull(items);
+            Assert.AreEqual(1, items.Count());
+        }
+        [TestMethod]
+        public async Task DeleteItem_LetezoTermek_TorliAzAdatbazisbol()
+        {
+            var result = await _controller.DeleteItem(1);
+
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            Assert.AreEqual(1, _context.BuffetItems.Count());
+
+            var toroltTermek = await _context.BuffetItems.FindAsync(1);
+            Assert.IsNull(toroltTermek);
+        }
+
+        [TestMethod]
+        public async Task DeleteItem_NemLetezoTermek_NotFoundHibado()
+        {
+            var result = await _controller.DeleteItem(99);
+
+            Assert.IsInstanceOfType(result, typeof(NotFoundResult));
+        }
     }
 }
