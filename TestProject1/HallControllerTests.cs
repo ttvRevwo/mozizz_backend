@@ -50,8 +50,20 @@ namespace TestProject1
             Assert.AreEqual(2, halls.Count);
         }
 
+        [TestMethod]
+        public void GetHallById_LetezoId_ReturnsOk()
+        {
+            var result = _controller.GetHallById(1);
 
-    
-        
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+            var hall = okResult.Value as Hall;
+            Assert.IsNotNull(hall);
+            Assert.AreEqual("Terem 1", hall.Name);
+            Assert.AreEqual(100, hall.SeatingCapacity);
+        }
+
+
     }
 }
