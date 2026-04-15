@@ -110,5 +110,29 @@ namespace TestProject1
             Assert.AreEqual("Nincs ilyen terem!", notFound.Value);
         }
 
+        [TestMethod]
+        public void DeleteHall_LetezoId_ReturnsOkEsTorli()
+        {
+            var result = _controller.DelethallById(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+            Assert.AreEqual("Sikeres törlés!", okResult.Value);
+            Assert.IsNull(_context.Halls.Find(1));
+            Assert.AreEqual(1, _context.Halls.Count());
+        }
+
+        [TestMethod]
+        public void DeleteHall_NemLetezoId_ReturnsNotFound()
+        {
+            var result = _controller.DelethallById(999);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            var notFound = (NotFoundObjectResult)result;
+            Assert.AreEqual("Nincs ilyen terem!", notFound.Value);
+        }
+
     }
 }
