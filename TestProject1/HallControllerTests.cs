@@ -65,5 +65,20 @@ namespace TestProject1
         }
 
 
+        [TestMethod]
+        public void NewHall_ErvenyesAdat_ReturnsOkEsElmenti()
+        {
+            var ujTerem = new Hall { Name = "Terem 3", Location = "Pince", SeatingCapacity = 30 };
+
+            var result = _controller.NewHall(ujTerem);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+            Assert.AreEqual("Sikeres létrehozás!", okResult.Value);
+            Assert.AreEqual(3, _context.Halls.Count());
+        }
+
+
     }
 }
