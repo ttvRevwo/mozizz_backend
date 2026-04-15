@@ -215,5 +215,25 @@ namespace TestProject1
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
         }
+
+        [TestMethod]
+        public void DeleteShowtime_LetezoId_ReturnsOkEsTorli()
+        {
+            var result = _controller.DeleteShowtime(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            Assert.IsNull(_context.Showtimes.Find(1));
+            Assert.AreEqual(1, _context.Showtimes.Count());
+        }
+
+        [TestMethod]
+        public void DeleteShowtime_NemLetezoId_ReturnsNotFound()
+        {
+            var result = _controller.DeleteShowtime(999);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
     }
 }
