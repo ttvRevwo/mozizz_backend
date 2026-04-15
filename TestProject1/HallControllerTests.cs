@@ -79,6 +79,36 @@ namespace TestProject1
             Assert.AreEqual(3, _context.Halls.Count());
         }
 
+        [TestMethod]
+        public void ModifyHall_LetezoTerem_ReturnsOkEsModosit()
+        {
+            var modositott = new Hall { HallId = 1, Name = "Módosított Terem", Location = "Emelet", SeatingCapacity = 120 };
+
+            var result = _controller.ModifyHall(modositott);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+            Assert.AreEqual("Sikeres módosítás!", okResult.Value);
+
+            var updatedHall = _context.Halls.Find(1);
+            Assert.IsNotNull(updatedHall);
+            Assert.AreEqual("Módosított Terem", updatedHall.Name);
+            Assert.AreEqual(120, updatedHall.SeatingCapacity);
+        }
+
+        [TestMethod]
+        public void ModifyHall_NemLetezoTerem_ReturnsNotFound()
+        {
+            var nemLetezo = new Hall { HallId = 999, Name = "Nem létező", Location = "Sehol", SeatingCapacity = 0 };
+
+            var result = _controller.ModifyHall(nemLetezo);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            var notFound = (NotFoundObjectResult)result;
+            Assert.AreEqual("Nincs ilyen terem!", notFound.Value);
+        }
 
     }
 }
