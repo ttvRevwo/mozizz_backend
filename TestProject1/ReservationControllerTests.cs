@@ -34,7 +34,7 @@ namespace TestProject1
                     { "EmailSettings:Password", "kamujelszo" }
                 }).Build();
 
-            _context.Users.Add(new User { UserId = 1, Name = "Teszt User", Email = "teszt@teszt.hu" });
+            _context.Users.Add(new User { UserId = 1, Name = "Teszt User", Email = "teszt@teszt.hu", PasswordHash = "kamu_jelszo_hash" });
             _context.Movies.Add(new Movie { MovieId = 1, Title = "Teszt Film" });
             _context.Halls.Add(new Hall { HallId = 1, Name = "Teszt Terem" });
             _context.Seats.Add(new Seat { SeatId = 1, HallId = 1, SeatNumber = "A1" });
@@ -70,5 +70,46 @@ namespace TestProject1
             var fakeEmailService = new EmailService(_config, _context);
             _controller = new ReservationController(_context, _config, fakeEmailService);
         }
+        [TestMethod]
+        public async Task GetMyHistory_LetezoFoglalasokkal_VisszaadjaAListat()
+        {
+            var result = await _controller.GetMyHistory(1);
+
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+
+            var okResult = (OkObjectResult)result;
+            var history = okResult.Value as IEnumerable<object>;
+
+            Assert.IsNotNull(history);
+            Assert.AreEqual(2, history.Count());
+        }
+
+        [TestMethod]
+        public async Task GetMyHistory_NincsFoglalasa_NotFoundotAd()
+        {
+            var result = await _controller.GetMyHistory(99);
+
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
+
+        [TestMethod]
+        public async Task CancelReservation_KettoOranBelulVan_BadRequestetAd()
+        {
+            var result = await _controller.CancelReservation(2);
+
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+
+            var badRequest = (BadRequestObjectResult)result;
+            Assert.IsTrue(badRequest.Value!.ToString()!.Contains("már nem tudod lemondani"));
+        }
+
+        [TestMethod]
+        public async Task CancelReservation_NemLetezoFoglalas_NotFoundotAd()
+        {
+            var result = await _controller.CancelReservation(999);
+
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
+
     }
 }
