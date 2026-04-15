@@ -108,5 +108,36 @@ namespace TestProject1
             _context.ChangeTracker.Clear();
             _controller = new TicketController(_context);
         }
+
+        [TestMethod]
+        public void ValidateTicket_ErvenyesKod_ReturnsOkEsMarkolja()
+        {
+            var result = _controller.ValidateTicket("TESZT-KOD-001");
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+
+            _context.ChangeTracker.Clear();
+            var ticket = _context.Tickets.First(t => t.TicketCode == "TESZT-KOD-001");
+            Assert.IsTrue(ticket.IsUsed);
+        }
+
+        [TestMethod]
+        public void ValidateTicket_MarHasznaltKod_ReturnsBadRequest()
+        {
+            var result = _controller.ValidateTicket("HASZNALT-KOD-002");
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
+
+        [TestMethod]
+        public void ValidateTicket_NemLetezoKod_ReturnsNotFound()
+        {
+            var result = _controller.ValidateTicket("NEM-LETEZO-KOD-999");
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
     }
 }
