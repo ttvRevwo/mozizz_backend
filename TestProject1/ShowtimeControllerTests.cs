@@ -173,5 +173,47 @@ namespace TestProject1
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
         }
+
+        [TestMethod]
+        public void ModifyShowtime_LetezoShowtime_ReturnsOk()
+        {
+            var modositott = new Showtime
+            {
+                ShowtimeId = 1,
+                MovieId = 1,
+                HallId = 1,
+                ShowDate = DateTime.Today.AddDays(10),
+                ShowTime1 = new TimeSpan(21, 0, 0),
+                CreatedAt = DateTime.Now
+            };
+
+            var result = _controller.ModifyShowtime(modositott);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+
+            var updatedShowtime = _context.Showtimes.Find(1);
+            Assert.IsNotNull(updatedShowtime);
+            Assert.AreEqual(new TimeSpan(21, 0, 0), updatedShowtime.ShowTime1);
+        }
+
+        [TestMethod]
+        public void ModifyShowtime_NemLetezoShowtime_ReturnsNotFound()
+        {
+            var nemLetezo = new Showtime
+            {
+                ShowtimeId = 999,
+                MovieId = 1,
+                HallId = 1,
+                ShowDate = DateTime.Today,
+                ShowTime1 = new TimeSpan(10, 0, 0),
+                CreatedAt = DateTime.Now
+            };
+
+            var result = _controller.ModifyShowtime(nemLetezo);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
     }
 }
