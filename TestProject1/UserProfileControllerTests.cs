@@ -47,5 +47,65 @@ namespace TestProject1
 
             _controller = new UserProfileController(_context, _config);
         }
+        [TestMethod]
+        public async Task GetProfile_LetezoUser_VisszaadjaAProfilt()
+        {
+            var result = await _controller.GetProfile(1);
+
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public async Task GetProfile_NemLetezoUser_NotFoundHibado()
+        {
+            var result = await _controller.GetProfile(99);
+
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+        }
+
+        [TestMethod]
+        public async Task UpdateProfile_LetezoUser_FrissitiAzAdatokat()
+        {
+            var frissitettAdatok = new User { Name = "Új Név", Phone = "+36209999999" };
+
+            var result = await _controller.UpdateProfile(1, frissitettAdatok);
+
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+
+            var user = await _context.Users.FindAsync(1);
+            Assert.IsNotNull(user);
+            Assert.AreEqual("Új Név", user.Name);
+            Assert.AreEqual("+36209999999", user.Phone);
+        }
+
+        [TestMethod]
+        public async Task ChangePassword_HelyesRegiJelszo_SikeresModositas()
+        {
+            var jelszoDto = new PasswordChangeDto
+            {
+                OldPassword = "regiJelszo123",
+                NewPassword = "UjTitkosJelszo456"
+            };
+
+            var result = await _controller.ChangePassword(1, jelszoDto);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+
+            var user = await _context.Users.FindAsync(1);
+            Assert.IsTrue(BCrypt.Net.BCrypt.Verify("UjTitkosJelszo456", user.PasswordHash));
+        }
+
+        [TestMethod]
+        public async Task ChangePassword_RosszRegiJelszo_BadRequestetAd()
+        {
+            var jelszoDto = new PasswordChangeDto
+            {
+                OldPassword = "hibas_regi_jelszo_probalkozas",
+                NewPassword = "UjTitkosJelszo456"
+            };
+
+            var result = await _controller.ChangePassword(1, jelszoDto);
+
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+        }
     }
 }
