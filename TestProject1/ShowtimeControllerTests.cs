@@ -65,5 +65,53 @@ namespace TestProject1
             _context.ChangeTracker.Clear();
             _controller = new ShowtimeController(_context);
         }
+        [TestMethod]
+        public void GetAllShowtimes_ReturnsOkWithList()
+        {
+            var result = _controller.GetAllShowtimes();
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+            var okResult = (OkObjectResult)result;
+            Assert.IsNotNull(okResult.Value);
+        }
+
+        [TestMethod]
+        public void GetByMovie_LetezoMovieId_ReturnsOk()
+        {
+            var result = _controller.GetByMovie(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void GetByMovie_NemLetezoMovieId_ReturnsUresLista()
+        {
+            var result = _controller.GetByMovie(999);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void GetById_LetezoId_ReturnsOk()
+        {
+            var result = _controller.GetById(1);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(OkObjectResult));
+        }
+
+        [TestMethod]
+        public void GetById_NemLetezoId_ReturnsNotFound()
+        {
+            var result = _controller.GetById(999);
+
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(NotFoundObjectResult));
+            var notFound = (NotFoundObjectResult)result;
+            Assert.AreEqual("A vetítés nem található.", notFound.Value);
+        }
     }
 }
